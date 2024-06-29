@@ -1,0 +1,13 @@
+.container {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  /* body{
+    background-image:url('https://www.thestatesman.com/wp-content/uploads/2020/07/online.jpg') ;
+  } */

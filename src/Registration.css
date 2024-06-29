@@ -1,0 +1,11 @@
+.background-image {
+    margin-left: 10px;
+    
+    margin-left: 10px;
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+  }
+  .registration-form {
+    background-color: rgb(255, 255, 255);
+  }

@@ -1,0 +1,23 @@
+.appp-container {
+  max-width: 600px; /* Adjust max-width as needed */
+  margin: 0 auto; /* Center align the content */
+  padding: 20px; /* Add padding for spacing */
+}
+
+ul {
+  list-style-type: none; /* Remove default list styles */
+  padding: 0; /* Remove padding */
+}
+
+li {
+  margin-bottom: 10px; /* Adjust margin between options */
+}
+
+label {
+  display: block; /* Make labels block level */
+  margin-bottom: 5px; /* Add margin below each label */
+}
+
+input[type="radio"] {
+  margin-right: 10px; /* Adjust margin between radio button and label text */
+}
