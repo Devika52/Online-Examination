@@ -14,6 +14,10 @@ import TeacherLogin from './TeacherLogin';
 import StudentLogin from './StudentLogin';
 import Appp from './Question1';
 import Teacher from './Teacher';
+import ViewQuestions from './questions/ViewQuestions';
+
+import AddQuestion from './questions/AddQuestion';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
@@ -27,7 +31,13 @@ root.render(
         <Route path="/teacher-login" element={<TeacherLogin/>}/>
         <Route path="/admin-login" element={<AdminLogin/>}/>
         <Route path="/student-login" element={<StudentLogin/>}/>
-        <Route path="question-bank" element={<Appp/>}/>
+
+        {/* Questions */}
+        <Route path="/question-bank" element={<Appp/>}/>
+        <Route path="/question-bank/add" element={<AddQuestion/>}/>
+        <Route path="/question-bank/view" element={<ViewQuestions/>}/>
+        
+
         <Route path="/teacher" element={<Teacher/>}/>
       </Routes>
       </Router>

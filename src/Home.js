@@ -30,11 +30,13 @@ function Home() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    axios.post('http://localhost:8081/admin_login', { username, password })
+    axios.post('http://localhost:8081/login', { username, password })
       .then(res => {
-        console.log(username, password);
+        
         if (res.data.success) {
-          localStorage.setItem('isAdminLoggedIn', true);
+          console.log(res.data.data);
+          const user = res.data.data
+          window.localStorage.setItem('user', JSON.stringify(user));
           navigate('/admin'); // Redirect to admin page upon successful login
         } else {
           alert("Incorrect Login");

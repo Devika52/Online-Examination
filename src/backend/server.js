@@ -16,18 +16,17 @@ const db = mysql.createConnection({
 
 
 // POST route for admin login
-app.post('/admin_login', (req, res) => {
+app.post('/login',  (req, res) => {
   const { username, password } = req.body;
-  console.log("the data on /admin_login",req.body)
-  const sql = "SELECT * FROM admin WHERE username = ? AND password = ?";
-  db.query(sql, [username, password], (err, data) => {
+  const sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+   db.query(sql, [username, password], (err, data) => {
     if (err) {
       console.error('Database error:', err);
       return res.status(500).json({ success: false, message: 'Internal server error' });
     }
     if (data.length > 0) {
-      console.log('Login successful:', data);
-      return res.json({ success: true, message: 'Login successful' });
+      console.log(data[0]);
+      return res.json({ success: true, message: 'Login successful', data:data[0] });
     } else {
       console.log('Login failed: No record found');
       return res.json({ success: false, message: 'Invalid username or password' });
@@ -64,6 +63,21 @@ app.post('/teacher/register', (req, res) => {
     res.status(201).json({ message: 'Teacher registered successfully!' });
   });
 });
+
+app.post('/questions/add',(req,res)=>{
+  const { question, option_1, option_2, option_3, option_4, answer } = req.body;
+  const query = 'INSERT INTO questions(question,option_1,option_2,option_3,option_4,answer) VALUES (?,?,?,?,?,?)'
+  db.query(query, [question, option_1, option_2, option_3,option_4,answer], (err, results) => {
+    if (err) {
+      console.error('Error occurred:', err);
+      res.status(500).json({success:'false', message: 'Internal server error' });
+      return;
+    }
+    res.status(201).json({success: 'true', message: 'Question Added successfully!' });
+  })
+
+})
+
 app.listen(8081, () => {
     console.log("Devika Listening on port 8081");
 });
