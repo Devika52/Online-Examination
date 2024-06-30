@@ -1,11 +1,49 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
 .background-image {
-    margin-left: 10px;
-    
-    margin-left: 10px;
-    background-size: cover;
-    background-position: center;
-    min-height: 100vh;
-  }
-  .registration-form {
-    background-color: rgb(255, 255, 255);
-  }
+  background: url('https://rare-gallery.com/thumbs/522743-sony-abstract.jpg') no-repeat center center fixed;
+  background-size: cover;
+  height: 100%;
+}
+
+.container {
+  height: 100%;
+}
+
+.registration-form {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.form-group label {
+  font-weight: bold;
+}
+
+.success-message {
+  color: green;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.error-message {
+  color: red;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.Button-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.text-center {
+  margin-bottom: 30px;
+}

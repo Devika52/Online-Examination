@@ -10,8 +10,13 @@ function StudentRegistration() {
     email: '',
     gender: 'male',
     dob: '',
-    address: ''
+    address: '',
+    password: '',
+    confirmPassword: ''
   });
+
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,14 +25,20 @@ function StudentRegistration() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
+    if (formData.password !== formData.confirmPassword) {
+      setMessage("Passwords do not match");
+      setMessageType('error');
+      return;
+    }
+
     try {
       const response = await axios.post('http://localhost:8081/student/register', formData);
-      console.log(response.data); // Log the response from the server
-      // Optionally, you can add further logic based on the response, e.g., show a success message
+      setMessage(response.data.message); // Assuming the backend sends a message in response
+      setMessageType('success');
     } catch (error) {
-      console.error('Error occurred:', error);
-      // Handle error: show an error message or perform any necessary actions
+      setMessage('Error occurred during registration');
+      setMessageType('error');
     }
   };
 
@@ -37,8 +48,12 @@ function StudentRegistration() {
       email: '',
       gender: 'male',
       dob: '',
-      address: ''
+      address: '',
+      password: '',
+      confirmPassword: ''
     });
+    setMessage('');
+    setMessageType('');
   };
 
   return (
@@ -97,6 +112,26 @@ function StudentRegistration() {
           required
         ></textarea>
 
+        <label htmlFor="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+        />
+
+        <label htmlFor="confirmPassword">Confirm Password</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          name="confirmPassword"
+          value={formData.confirmPassword}
+          onChange={handleChange}
+          required
+        />
+
         <br />
         <button style={{ marginRight: '10px' }} type="submit">
           Submit
@@ -108,6 +143,11 @@ function StudentRegistration() {
           <Button variant="secondary">Teacher Register</Button>
         </Link>
       </form>
+      {message && (
+        <div className={messageType === 'success' ? 'success-message' : 'error-message'}>
+          {message}
+        </div>
+      )}
     </div>
   );
 }

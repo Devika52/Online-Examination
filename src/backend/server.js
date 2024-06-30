@@ -35,19 +35,35 @@ app.post('/admin_login', (req, res) => {
   });
 });
 app.post('/student/register', (req, res) => {
-    const { fullName, email, gender, dob, address } = req.body;
-  
-    // Insert into MySQL table
-    const sql = 'INSERT INTO students (name, email, gender, dob, address) VALUES (?, ?, ?, ?, ?)';
-    db.query(sql, [fullName, email, gender, dob, address], (err, result) => {
-      if (err) {
-        console.error('Database insert error:', err);
-        return res.status(500).json({ success: false, error: 'Failed to register student' });
-      }
-      console.log('Student registered:', result);
-      res.status(200).json({ success: true, message: 'Student registered successfully' });
-    });
+  const { fullName, email, gender, dob, address, password } = req.body;
+
+  // Insert the student into the database
+  const query = 'INSERT INTO student (name, email, gender, dob, address, password) VALUES (?, ?, ?, ?, ?, ?)';
+  db.query(query, [fullName, email, gender, dob, address, password], (err, results) => {
+    if (err) {
+      console.error('Error occurred:', err);
+      res.status(500).json({ message: 'Internal server error' });
+      return;
+    }
+
+    res.status(201).json({ message: 'Student registered successfully!' });
   });
+});
+app.post('/teacher/register', (req, res) => {
+  const { name, email, address, gender, phoneNumber, password } = req.body;
+
+  // Insert the teacher into the database
+  const query = 'INSERT INTO teacher (name, email, address, gender, ph_no, password) VALUES (?, ?, ?, ?, ?, ?)';
+  db.query(query, [name, email, address, gender, phoneNumber, password], (err, results) => {
+    if (err) {
+      console.error('Error occurred:', err);
+      res.status(500).json({ message: 'Internal server error' });
+      return;
+    }
+
+    res.status(201).json({ message: 'Teacher registered successfully!' });
+  });
+});
 app.listen(8081, () => {
     console.log("Listening on port 8081");
 });
