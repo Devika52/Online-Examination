@@ -1,12 +1,8 @@
+/* Registration.css */
+
 html, body {
   margin: 0;
   padding: 0;
-  height: 100%;
-}
-
-.background-image {
-  background: url('https://rare-gallery.com/thumbs/522743-sony-abstract.jpg') no-repeat center center fixed;
-  background-size: cover;
   height: 100%;
 }
 
@@ -15,7 +11,7 @@ html, body {
 }
 
 .registration-form {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255);
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;

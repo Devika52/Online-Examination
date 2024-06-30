@@ -57,8 +57,13 @@ function StudentRegistration() {
   };
 
   return (
-    <div className="container">
-      <h2>Student Registration Form</h2>
+    <div className="container ">
+      <div className="text-center mb-4">
+        <Link to="/">
+          <Button variant="secondary">Back</Button>
+        </Link>
+      </div>
+      <h2 className="text-center">Student Registration Form</h2>
       <form onSubmit={handleSubmit}>
         <label htmlFor="fullName">Full Name</label>
         <input
@@ -133,15 +138,9 @@ function StudentRegistration() {
         />
 
         <br />
-        <button style={{ marginRight: '10px' }} type="submit">
-          Submit
-        </button>
-        <button style={{ marginRight: '10px' }} type="button" onClick={handleReset}>
-          Reset
-        </button>
-        <Link to="/teacher-register">
-          <Button variant="secondary">Teacher Register</Button>
-        </Link>
+        <br/>
+        <Button variant="outline-info" type="submit">Submit</Button>{' '}
+        <Button variant="warning" type="button" onClick={handleReset}>Reset</Button>
       </form>
       {message && (
         <div className={messageType === 'success' ? 'success-message' : 'error-message'}>

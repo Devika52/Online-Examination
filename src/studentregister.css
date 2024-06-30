@@ -8,6 +8,9 @@
     
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
+  div .container{
+    margin: 50px auto;
+  }
   .success-message {
     color: green;
     margin-top: 20px;
