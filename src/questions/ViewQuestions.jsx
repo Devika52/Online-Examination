@@ -40,10 +40,10 @@ const ViewQuestions = () => {
     }
     return (
         <div className="container">
-           <h3> Timer: {<Countdown date={Date.now() + 5000} onComplete={handleComplete}>
-           <Completionist/>
+           {!timeOut && <h3> Time Remaining: {<Countdown date={Date.now() + 5000} onComplete={handleComplete}>
             </Countdown>}
-            </h3>
+            </h3>}
+            {timeOut && <h3>Time's Up</h3>}
             <br/>
             <Form onSubmit={handleSubmit}>
                 {questions.length > 0 && questions.map((question, index) => {
