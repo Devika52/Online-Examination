@@ -52,6 +52,7 @@ function Admin() {
                     <Button style={buttonStyle} className="ms-2 mb-2" variant="outline-info">Student Approval</Button><br/>
                     <Button style={buttonStyle} className="ms-2 mb-2" variant="outline-info">Teacher Approval</Button><br/>
                     <Link to='/question-bank/add'><Button style={buttonStyle}  className="ms-2 mb-2" variant="outline-info">Add Question</Button></Link><br/>
+                    <Link to='/question-bank/view'><Button style={buttonStyle}  className="ms-2 mb-2" variant="outline-info">View Question</Button></Link><br/>
                     <Button style={buttonStyle} className="ms-2 mb-2" variant="outline-info">View Exam Result</Button>
                 </div>
             </div>

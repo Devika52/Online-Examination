@@ -78,6 +78,19 @@ app.post('/questions/add',(req,res)=>{
 
 })
 
+app.get('/questions/get',(req,res)=>{
+  const sql = 'SELECT * FROM questions'
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error('Error occurred:', err);
+      res.status(500).json({success:'false', message: 'Internal server error' });
+      return;
+    }
+    console.log(results);
+    res.status(201).json({success: 'true', results,message: 'Question Added successfully!' });
+  })
+})
+
 app.listen(8081, () => {
     console.log("Devika Listening on port 8081");
 });
