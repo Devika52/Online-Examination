@@ -57,7 +57,7 @@ const ViewQuestions = () => {
            {!timeOut && <h3> Time Remaining: {<Countdown date={Date.now() + 60000} onComplete={handleComplete}>
             </Countdown>}
             </h3>}
-            {timeOut && <h3>Time's Up</h3>}
+            {timeOut && <h3 style={{color:'red'}}>Time's Up</h3>}
             <br/>
             <Form onSubmit={handleSubmit}>
                 {questions.length > 0 && questions.map((question, index) => {
