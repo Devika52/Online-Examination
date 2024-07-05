@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jun 30, 2024 at 06:13 PM
+-- Generation Time: Jul 05, 2024 at 07:24 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.0.28
 
@@ -42,6 +42,25 @@ INSERT INTO `admin` (`username`, `password`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `answer_submission`
+--
+
+CREATE TABLE `answer_submission` (
+  `id` bigint(20) NOT NULL,
+  `marks` int(4) NOT NULL,
+  `user_id` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `answer_submission`
+--
+
+INSERT INTO `answer_submission` (`id`, `marks`, `user_id`) VALUES
+(1, 2, 1);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `questions`
 --
 
@@ -60,7 +79,9 @@ CREATE TABLE `questions` (
 --
 
 INSERT INTO `questions` (`id`, `question`, `option_1`, `option_2`, `option_3`, `option_4`, `answer`) VALUES
-(1, 'Capital of India', 'Delhi', 'Trivandrum', 'Kolkata', 'Aby', 'Delhi');
+(1, 'Capital of India ?', 'Delhi', 'Trivandrum', 'Kolkata', 'Aby', 'Delhi'),
+(2, 'Who is known as the Father of Computer ?', 'Steve Sajan Jacob', 'Aiswarya Ligin', 'Devika S Suresh', 'Charles Babbage', 'Charles Babbage'),
+(3, 'What does HTTP stand for ?', 'HyperText Transfer Protocol', 'HyperText Transfer Program', 'HyperText Transmission Protocol', 'HyperText Transfer Procedure', 'HyperText Transfer Protocol');
 
 -- --------------------------------------------------------
 
@@ -146,10 +167,18 @@ INSERT INTO `users` (`id`, `username`, `password`, `first_name`, `last_name`, `e
 --
 
 --
+-- Indexes for table `answer_submission`
+--
+ALTER TABLE `answer_submission`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `answer_student_relation` (`user_id`);
+
+--
 -- Indexes for table `questions`
 --
 ALTER TABLE `questions`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `question` (`question`) USING HASH;
 
 --
 -- Indexes for table `student`
@@ -168,16 +197,32 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `answer_submission`
+--
+ALTER TABLE `answer_submission`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `answer_submission`
+--
+ALTER TABLE `answer_submission`
+  ADD CONSTRAINT `answer_student_relation` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
