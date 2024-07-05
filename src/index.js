@@ -15,6 +15,7 @@ import StudentLogin from './StudentLogin';
 import Appp from './Question1';
 import Teacher from './Teacher';
 import ViewQuestions from './questions/ViewQuestions';
+import Results from './results/Results';
 
 import AddQuestion from './questions/AddQuestion';
 
@@ -36,6 +37,9 @@ root.render(
         <Route path="/question-bank" element={<Appp/>}/>
         <Route path="/question-bank/add" element={<AddQuestion/>}/>
         <Route path="/question-bank/view" element={<ViewQuestions/>}/>
+
+        {/* Results */}
+        <Route path="/admin/results" element={<Results/>}/>
         
 
         <Route path="/teacher" element={<Teacher/>}/>

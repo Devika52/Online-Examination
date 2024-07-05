@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './App.css';
 import './login.css';
+import { setUser } from './hooks/useAuth';
 
 function Home() {
   const [username, setUsername] = useState('');
@@ -36,7 +37,7 @@ function Home() {
         if (res.data.success) {
           console.log(res.data.data);
           const user = res.data.data
-          window.localStorage.setItem('user', JSON.stringify(user));
+          setUser(user)
           navigate('/admin'); // Redirect to admin page upon successful login
         } else {
           alert("Incorrect Login");

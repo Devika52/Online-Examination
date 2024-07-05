@@ -13,6 +13,7 @@ const AddQuestion = () => {
         option_4: '',
         answer: ''
     })
+    const [success,setSuccess] = useState(false)
     const handleChange = (e)=>{
         const name = e.target.name;
         const value = e.target.value;
@@ -26,6 +27,15 @@ const AddQuestion = () => {
         console.log(formData);
         axios.post(post_api_url,formData).then(response => {
             if(response.data.success){
+              setSuccess(true)
+              setFormData({
+                question : '',
+                option_1:'',
+                option_2:'',
+                option_3: '',
+                option_4: '',
+                answer: ''
+              })
                 console.log(response.data);
             }
         })
@@ -33,6 +43,7 @@ const AddQuestion = () => {
   return (
     <div className='container'>
         <h3>Add Question</h3>
+        {success && <h4 style={{color:'darkgreen'}}>Question Added Succesfully</h4>}
         <Form onSubmit={handleSubmit}>
       <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
         <Form.Label>Question</Form.Label>
@@ -47,7 +58,7 @@ const AddQuestion = () => {
         <Form.Control type="text"  name='option_4' value={formData.option_4} onChange={handleChange}/>
         <Form.Label>Answer</Form.Label>
         <Form.Control type="text" name='answer' value={formData.answer} onChange={handleChange}/>
-        <Form.Control type="submit"/>
+        <Form.Control style={{marginTop:'1rem',backgroundColor:'darkgreen',color:'white'}} type="submit"/>
       </Form.Group>
 
     </Form>

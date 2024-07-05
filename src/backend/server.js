@@ -1,5 +1,6 @@
 const express = require('express');
 const mysql = require('mysql');
+const mysql2 = require('mysql2');
 const cors = require('cors');
 const app = express();
 const multer=require('multer')
@@ -12,6 +13,15 @@ const db = mysql.createConnection({
     password: '',
     database: 'examination',
 });
+
+const DB = mysql2
+  .createPool({
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'examination',
+  })
+  .promise();
 
 
 
@@ -86,9 +96,38 @@ app.get('/questions/get',(req,res)=>{
       res.status(500).json({success:'false', message: 'Internal server error' });
       return;
     }
-    console.log(results);
     res.status(201).json({success: 'true', results,message: 'Question Added successfully!' });
   })
+})
+
+app.post('/questions/submit_answers',async (req,res)=>{
+  const payload = req.body;
+  console.log(payload);
+  const formdata= payload.formData
+  let marks=0;
+  const sql = `SELECT answer FROM questions WHERE id = ?`
+  for (const [key, value] of Object.entries(formdata)) {
+    const [resultu] = await DB.query(sql,[key]);
+        if(resultu[0].answer===value)
+         marks+=1;
+  }
+  const query = `INSERT INTO answer_submission(marks,user_id) VALUES (?,?)`
+  console.log(marks);
+  const [fresult] = await DB.query(query,[marks,payload.user_id]);
+
+  res.json({
+    success: true,
+    submission_id: fresult.insertId
+  })
+  // db.query(query, [question, option_1, option_2, option_3,option_4,answer], (err, results) => {
+  //   if (err) {
+  //     console.error('Error occurred:', err);
+  //     res.status(500).json({success:'false', message: 'Internal server error' });
+  //     return;
+  //   }
+  //   res.status(201).json({success: 'true', message: 'Question Added successfully!' });
+  // })
+
 })
 
 app.listen(8081, () => {

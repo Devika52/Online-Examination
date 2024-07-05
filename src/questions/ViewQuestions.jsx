@@ -4,9 +4,14 @@ import { Form } from 'react-bootstrap'
 import axios from 'axios'
 import Button from 'react-bootstrap/Button';
 import Countdown from 'react-countdown';
+import { getUser } from '../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 const ViewQuestions = () => {
     const fetch_api_url = 'http://localhost:8081/questions/get';
+    const form_submit_url = 'http://localhost:8081/questions/submit_answers';
+    const navigate = useNavigate()
+    const current_user = getUser()
     const [questions, setQuestions] = useState([]);
     const [timeOut,setTimeOut] = useState(false)
     useEffect(() => {
@@ -36,11 +41,20 @@ const ViewQuestions = () => {
         let formData = new FormData(e.target);
         formData = Object.fromEntries(formData.entries())
         console.log(formData);
-
+        const payload = {
+            user_id : current_user.id,
+            formData : formData
+        }
+        axios.post(form_submit_url ,payload).then(response => {
+            if(response.data.success){
+                console.log(response.data);
+                navigate('/admin/results')
+            }
+        })
     }
     return (
         <div className="container">
-           {!timeOut && <h3> Time Remaining: {<Countdown date={Date.now() + 5000} onComplete={handleComplete}>
+           {!timeOut && <h3> Time Remaining: {<Countdown date={Date.now() + 60000} onComplete={handleComplete}>
             </Countdown>}
             </h3>}
             {timeOut && <h3>Time's Up</h3>}
