@@ -12,7 +12,8 @@ function StudentRegistration() {
     dob: '',
     address: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    phno: ''
   });
 
   const [message, setMessage] = useState('');
@@ -50,7 +51,8 @@ function StudentRegistration() {
       dob: '',
       address: '',
       password: '',
-      confirmPassword: ''
+      confirmPassword: '',
+      phno: ''
     });
     setMessage('');
     setMessageType('');
@@ -85,6 +87,15 @@ function StudentRegistration() {
           required
         />
 
+<label htmlFor="phno">Phone number</label>
+        <input
+          type="number"
+          id="phno"
+          name="phno"
+          value={formData.phno}
+          onChange={handleChange}
+          required
+        />
         <label htmlFor="gender">Gender</label>
         <select
           id="gender"

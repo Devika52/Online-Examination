@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
@@ -8,6 +9,8 @@ import './Registration.css';
 
 function StudentLogin() {
   const [role, setRole] = useState('Student'); // Default role set to Student
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate(); // Hook to navigate programmatically
 
   const handleRoleChange = (e) => {
@@ -19,6 +22,28 @@ function StudentLogin() {
       navigate('/');
     } else if (selectedRole === 'Teacher') {
       navigate('/teacher-login');
+    }
+  };
+
+  const handleEmailChange = (e) => setEmail(e.target.value);
+  const handlePasswordChange = (e) => setPassword(e.target.value);
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:8081/api/login', {
+        email,
+        password
+      });
+      console.log(response.data)
+      if (response.data.success) {
+        navigate('/question-bank/view');
+      } else {
+        alert('Invalid credentials');
+      }
+    } catch (error) {
+      console.error('Error during authentication', error);
+      alert('Error during authentication');
     }
   };
 
@@ -34,13 +59,13 @@ function StudentLogin() {
             </select>
           </div>
           <h1 className="text-center mb-4">Student Login</h1>
-          <Form style={{ backgroundColor: 'white', padding: '20px', borderRadius: '10px' }}>
+          <Form onSubmit={handleLogin} style={{ backgroundColor: 'white', padding: '20px', borderRadius: '10px' }}>
             <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
               <Form.Label column sm="4">
-                Username
+                Email
               </Form.Label>
               <Col sm="8">
-                <Form.Control type="text" placeholder="Username" />
+                <Form.Control type="email" placeholder="Email" value={email} onChange={handleEmailChange} />
               </Col>
             </Form.Group>
 
@@ -49,7 +74,7 @@ function StudentLogin() {
                 Password
               </Form.Label>
               <Col sm="8">
-                <Form.Control type="password" placeholder="Password" />
+                <Form.Control type="password" placeholder="Password" value={password} onChange={handlePasswordChange} />
               </Col>
             </Form.Group>
 

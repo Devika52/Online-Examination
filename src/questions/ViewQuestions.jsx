@@ -5,7 +5,7 @@ import axios from 'axios'
 import Button from 'react-bootstrap/Button';
 import Countdown from 'react-countdown';
 import { getUser } from '../hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,Link } from 'react-router-dom';
 
 const ViewQuestions = () => {
     const fetch_api_url = 'http://localhost:8081/questions/get';
@@ -35,7 +35,9 @@ const ViewQuestions = () => {
     const handleComplete = ()=>{
         setTimeOut(true)
     }
-
+    const handleBack = () => {
+        navigate(-1); // Navigate back to the previous page
+      };
     const handleSubmit = (e) => {
         e.preventDefault()
         let formData = new FormData(e.target);
@@ -54,6 +56,9 @@ const ViewQuestions = () => {
     }
     return (
         <div className="container">
+             <div className="d-flex justify-content-center mb-4">
+        <button className="btn btn-secondary back-button" onClick={handleBack}>Back</button>
+      </div>
            {!timeOut && <h3> Time Remaining: {<Countdown date={Date.now() + 60000} onComplete={handleComplete}>
             </Countdown>}
             </h3>}

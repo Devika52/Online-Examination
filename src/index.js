@@ -16,7 +16,12 @@ import Appp from './Question1';
 import Teacher from './Teacher';
 import ViewQuestions from './questions/ViewQuestions';
 import Results from './results/Results';
-
+import StudentList from './StudentList';
+import TeacherList from './backend/TeacherList';
+import UpdateStudent from './UpdateStudent';
+import UpdateTeacher from './backend/UpdateTeacher';
+import DeleteStudent from './DeleteStudent';
+import DeleteTeacher from './DeleteTeacher';
 import AddQuestion from './questions/AddQuestion';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -43,6 +48,12 @@ root.render(
         
 
         <Route path="/teacher" element={<Teacher/>}/>
+        <Route path="/student-list" element={<StudentList/>}/>
+        <Route path="/teacher-list" element={<TeacherList/>}/>
+        <Route path="/update-student" element={<UpdateStudent/>}/>
+        <Route path="/update-teacher" element={<UpdateTeacher/>}/>
+        <Route path="/delete-student" element={<DeleteStudent/>}/>
+        <Route path="/delete-teacher" element={<DeleteTeacher/>}/>
       </Routes>
       </Router>
    

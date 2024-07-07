@@ -5,9 +5,12 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Registration.css';
+import axios from 'axios';
 
 function TeacherLogin() {
   const [role, setRole] = useState('Teacher'); // Default role set to Teacher
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate(); // Hook to navigate programmatically
 
   const handleRoleChange = (e) => {
@@ -22,6 +25,22 @@ function TeacherLogin() {
     }
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    axios.post('http://localhost:8081/teacher-login', { email, password, role })
+      .then((response) => {
+        if (response.data.success) {
+          navigate('/teacher');
+        } else {
+          alert('Invalid credentials');
+        }
+      })
+      .catch((error) => {
+        alert('An error occurred');
+        console.error(error);
+      });
+  };
+
   return (
     <div className="background-image">
       <div className="d-flex justify-content-center align-items-center vh-100">
@@ -34,13 +53,18 @@ function TeacherLogin() {
             </select>
           </div>
           <h1 className="text-center mb-4">Teacher's Login</h1>
-          <Form>
+          <Form onSubmit={handleSubmit}>
             <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
               <Form.Label column sm="4">
-                Username
+                Email
               </Form.Label>
               <Col sm="8">
-                <Form.Control type="text" placeholder="Username" />
+                <Form.Control 
+                  type="email" 
+                  placeholder="Email" 
+                  value={email} 
+                  onChange={(e) => setEmail(e.target.value)} 
+                />
               </Col>
             </Form.Group>
 
@@ -49,7 +73,12 @@ function TeacherLogin() {
                 Password
               </Form.Label>
               <Col sm="8">
-                <Form.Control type="password" placeholder="Password" />
+                <Form.Control 
+                  type="password" 
+                  placeholder="Password" 
+                  value={password} 
+                  onChange={(e) => setPassword(e.target.value)} 
+                />
               </Col>
             </Form.Group>
 
