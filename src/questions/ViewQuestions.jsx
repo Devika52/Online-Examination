@@ -51,6 +51,7 @@ const ViewQuestions = () => {
             if(response.data.success){
                 console.log(response.data);
                 navigate('/admin/results')
+                
             }
         })
     }

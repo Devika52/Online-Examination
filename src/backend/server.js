@@ -299,6 +299,23 @@ app.post('/teacher-login', (req, res) => {
     res.status(400).json({ error: 'Invalid role' });
   }
 });
+// server.js
+app.get('/results/:userId', (req, res) => {
+  const userId = req.params.userId;
+
+  const query = 'SELECT marks FROM answer_submission WHERE user_id = ? ORDER BY id DESC LIMIT 1';
+  db.query(query, [userId], (err, results) => {
+      if (err) {
+          return res.status(500).json({ error: 'Database error' });
+      }
+      if (results.length > 0) {
+          res.json({ success: true, marks: results[0].marks });
+      } else {
+          res.status(404).json({ error: 'No marks found for this user' });
+      }
+  });
+});
+
 app.listen(8081, () => {
     console.log("Devika Listening on port 8081");
 });
