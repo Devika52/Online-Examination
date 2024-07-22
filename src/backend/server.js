@@ -44,12 +44,12 @@ app.post('/login',  (req, res) => {
   });
 });
 app.post('/student/register', (req, res) => {
-  const { fullName, email, gender, dob, phno, address, password } = req.body;
+  const { username, first_name,last_name, email, gender, dob, phno, address, password } = req.body;
   console.log("Form Data",req.body)
   // Insert the student into the database
-  const query = 'INSERT INTO student (name, email, gender, dob, ph_no, address, password) VALUES (?, ?, ?, ?, ?, ?, ?)';
+  const query = 'INSERT INTO users (username,password,first_name,last_name, email, role,phone_no, gender, address, date_of_birth) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
   console.log("phone number1",phno)
-  db.query(query, [fullName, email, gender, dob, phno, address, password], (err, results) => {
+  db.query(query, [fullName, username, password, first_name, last_name, email, 'nstudent',phno,gender,address,dob ], (err, results) => {
     if (err) {
       console.error('Error occurred:', err);
       res.status(500).json({ message: 'Internal server error' });
@@ -63,8 +63,9 @@ app.post('/teacher/register', (req, res) => {
   const { name, email, address, gender, phoneNumber, password } = req.body;
 
   // Insert the teacher into the database
-  const query = 'INSERT INTO teacher (name, email, address, gender, ph_no, password) VALUES (?, ?, ?, ?, ?, ?)';
-  db.query(query, [name, email, address, gender, phoneNumber, password], (err, results) => {
+  const query = 'INSERT INTO users (username,password,first_name,last_name, email, role,phone_no, gender, address, date_of_birth) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  console.log("phone number1",phno)
+  db.query(query, [fullName, username, password, first_name, last_name, email, 'teacher',phno,gender,address,dob ], (err, results) => {
     if (err) {
       console.error('Error occurred:', err);
       res.status(500).json({ message: 'Internal server error' });
@@ -112,9 +113,22 @@ app.post('/questions/submit_answers',async (req,res)=>{
         if(resultu[0].answer===value)
          marks+=1;
   }
-  const query = `INSERT INTO answer_submission(marks,user_id) VALUES (?,?)`
-  console.log(marks);
-  const [fresult] = await DB.query(query,[marks,payload.user_id]);
+  const qsql = `SELECT * FROM questions`;
+  const [qresultu] = await DB.query(qsql);
+  const total_marks = qresultu.length;
+  const percentage = (marks/total_marks * 100)
+ let  grade = 'F'
+  if(percentage>90)
+    grade = 'A'
+  else if(percentage>80)
+    grade = 'B'
+  else if(percentage>70)
+    grade = 'C'
+  else if(percentage>60)
+    grade = 'D'
+  const query = `INSERT INTO answer_submission(marks,grade,user_id) VALUES (?,?,?)`
+  console.log(marks,percentage,grade);
+  const [fresult] = await DB.query(query,[marks,grade,payload.user_id]);
 
   res.json({
     success: true,
@@ -133,7 +147,7 @@ app.post('/questions/submit_answers',async (req,res)=>{
 
 app.post('/api/login', (req, res) => {
   const { email, password } = req.body;
-  const query = 'SELECT * FROM student WHERE email = ? AND password = ?';
+  const query = 'SELECT * FROM users WHERE email = ? AND password = ?';
   console.log("login",req.body)
   db.query(query, [email, password], (err, results) => {
     if (err) {
@@ -261,16 +275,18 @@ app.delete('/api/teachers/:teacherId', (req, res) => {
   });
 });
 app.get('/results', async (req, res) => {
-  const { user_id } = req.query; // Assuming user_id is passed as query parameter
+  console.log('test');
+  const { user_id } = req.query.id; // Assuming user_id is passed as query parameter
   
   try {
     const query = `
-      SELECT id, marks
+      SELECT id, marks,grade
       FROM answer_submission
       WHERE user_id = ?
     `;
     
     const results = await db.query(query, [user_id]); // Execute the query with user_id parameter
+    console.log(results,'test');
 
     // Send the results as JSON response
     res.json({ success: true, studentMarks: results });
@@ -303,13 +319,13 @@ app.post('/teacher-login', (req, res) => {
 app.get('/results/:userId', (req, res) => {
   const userId = req.params.userId;
 
-  const query = 'SELECT marks FROM answer_submission WHERE user_id = ? ORDER BY id DESC LIMIT 1';
+  const query = 'SELECT marks,grade FROM answer_submission WHERE user_id = ? ORDER BY id DESC LIMIT 1';
   db.query(query, [userId], (err, results) => {
       if (err) {
           return res.status(500).json({ error: 'Database error' });
       }
       if (results.length > 0) {
-          res.json({ success: true, marks: results[0].marks });
+          res.json({ success: true, marks: results[0].marks, grade:results[0].grade });
       } else {
           res.status(404).json({ error: 'No marks found for this user' });
       }

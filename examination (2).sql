@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Jul 07, 2024 at 08:17 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Host: localhost
+-- Generation Time: Jul 22, 2024 at 11:46 AM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.0.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -48,6 +48,7 @@ INSERT INTO `admin` (`username`, `password`) VALUES
 CREATE TABLE `answer_submission` (
   `id` bigint(20) NOT NULL,
   `marks` int(4) NOT NULL,
+  `grade` varchar(2) NOT NULL DEFAULT 'F',
   `user_id` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -55,10 +56,17 @@ CREATE TABLE `answer_submission` (
 -- Dumping data for table `answer_submission`
 --
 
-INSERT INTO `answer_submission` (`id`, `marks`, `user_id`) VALUES
-(1, 2, 1),
-(2, 2, 1),
-(3, 2, 1);
+INSERT INTO `answer_submission` (`id`, `marks`, `grade`, `user_id`) VALUES
+(1, 2, 'F', 1),
+(2, 0, 'F', 2),
+(3, 2, 'D', 2),
+(4, 2, 'D', 2),
+(5, 4, 'C', 2),
+(6, 3, 'F', 2),
+(7, 4, 'C', 2),
+(8, 3, 'F', 2),
+(9, 4, 'C', 2),
+(10, 5, 'A', 2);
 
 -- --------------------------------------------------------
 
@@ -84,7 +92,8 @@ INSERT INTO `questions` (`id`, `question`, `option_1`, `option_2`, `option_3`, `
 (1, 'Capital of India ?', 'Delhi', 'Trivandrum', 'Kolkata', 'Aby', 'Delhi'),
 (2, 'Who is known as the Father of Computer ?', 'Steve Sajan Jacob', 'Aiswarya Ligin', 'Devika S Suresh', 'Charles Babbage', 'Charles Babbage'),
 (3, 'What does HTTP stand for ?', 'HyperText Transfer Protocol', 'HyperText Transfer Program', 'HyperText Transmission Protocol', 'HyperText Transfer Procedure', 'HyperText Transfer Protocol'),
-(5, 'What is HTML stands for?', 'Hyper Text Markup Language', 'Hyper Test Makeup Language', 'Hyper Tester Markup Language', 'Hyper Text Markup Languages', 'Hyper Text Markup Language');
+(5, 'Expand HTML', 'Hypertext Markup Language', 'HyperText Transfer Makeup Language', 'HyperText Transformer Makeup Language', 'HyperCool Transformer Makeup Language', 'Hypertext Markup Language'),
+(6, 'Expand XML', 'Extensible Markup Language', 'Extendable Markup Language', 'Extendable Minimalist Language', 'Extendable Markup Linguistics', 'Extensible Markup Language');
 
 -- --------------------------------------------------------
 
@@ -93,10 +102,10 @@ INSERT INTO `questions` (`id`, `question`, `option_1`, `option_2`, `option_3`, `
 --
 
 CREATE TABLE `student` (
-  `student_id` bigint(20) NOT NULL,
+  `student_id` int(10) NOT NULL,
   `name` varchar(20) NOT NULL,
-  `email` varchar(40) NOT NULL,
   `password` varchar(20) NOT NULL,
+  `email` varchar(20) NOT NULL,
   `ph_no` int(10) NOT NULL,
   `subject` varchar(10) NOT NULL,
   `address` varchar(50) NOT NULL,
@@ -108,9 +117,9 @@ CREATE TABLE `student` (
 -- Dumping data for table `student`
 --
 
-INSERT INTO `student` (`student_id`, `name`, `email`, `password`, `ph_no`, `subject`, `address`, `gender`, `dob`) VALUES
-(2, 'liginn', 'ligin@gmail.com', 'fdsa', 2147483647, '', 'Vellayambalam', 'female', '2007-05-30'),
-(5, 'Devika Suresh. S', 'devikasuresh@gmail.c', 'devu', 2147483647, '', 'Thunduvilakathu veedu, Pangapara', 'female', '2004-05-02');
+INSERT INTO `student` (`student_id`, `name`, `password`, `email`, `ph_no`, `subject`, `address`, `gender`, `dob`) VALUES
+(0, 'Abhay', 'asdf', 'abhays.babu88@gmail.', 0, '', 'karamana', 'male', '2004-05-09'),
+(0, 'ligin', 'fdsa', 'ligin@gmail.com', 0, '', 'asdf', 'female', '2007-05-29');
 
 -- --------------------------------------------------------
 
@@ -119,7 +128,7 @@ INSERT INTO `student` (`student_id`, `name`, `email`, `password`, `ph_no`, `subj
 --
 
 CREATE TABLE `teacher` (
-  `teacher_id` bigint(20) NOT NULL,
+  `ID` int(100) NOT NULL,
   `name` varchar(20) NOT NULL,
   `password` varchar(20) NOT NULL,
   `email` varchar(20) NOT NULL,
@@ -132,9 +141,9 @@ CREATE TABLE `teacher` (
 -- Dumping data for table `teacher`
 --
 
-INSERT INTO `teacher` (`teacher_id`, `name`, `password`, `email`, `ph_no`, `gender`, `address`) VALUES
-(1, 'Deepthi Rani', 'asdf', 'deepthi@gmail.com', 123123123, 'Female', 'Thirumalaa'),
-(3, 'Gautham', 'gautham', 'gautham@gmail.com', 2147483647, 'Male', 'Thirumala');
+INSERT INTO `teacher` (`ID`, `name`, `password`, `email`, `ph_no`, `gender`, `address`) VALUES
+(0, 'Deepthi', 'asdf', 'deepthi@gmail.com', 2147483647, 'Female', 'Thirumala'),
+(0, 'Gautham', 'asdf', 'gautham@gmail.com', 2147483647, 'Male', 'Kaimanam');
 
 -- --------------------------------------------------------
 
@@ -187,13 +196,7 @@ ALTER TABLE `questions`
 -- Indexes for table `student`
 --
 ALTER TABLE `student`
-  ADD PRIMARY KEY (`student_id`);
-
---
--- Indexes for table `teacher`
---
-ALTER TABLE `teacher`
-  ADD PRIMARY KEY (`teacher_id`);
+  ADD PRIMARY KEY (`email`);
 
 --
 -- Indexes for table `users`
@@ -209,25 +212,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `answer_submission`
 --
 ALTER TABLE `answer_submission`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `student`
---
-ALTER TABLE `student`
-  MODIFY `student_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `teacher`
---
-ALTER TABLE `teacher`
-  MODIFY `teacher_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `users`

@@ -6,10 +6,11 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Registration.css';
+import { setUser } from './hooks/useAuth';
 
 function StudentLogin() {
   const [role, setRole] = useState('Student'); // Default role set to Student
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate(); // Hook to navigate programmatically
 
@@ -25,26 +26,27 @@ function StudentLogin() {
     }
   };
 
-  const handleEmailChange = (e) => setEmail(e.target.value);
+  const handleUsernameChange = (e) => setUsername(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post('http://localhost:8081/api/login', {
-        email,
-        password
+  const handleLogin = (event) => {
+    event.preventDefault();
+    axios.post('http://localhost:8081/login', { username, password })
+      .then(res => {
+        
+        if (res.data.success) {
+          console.log(res.data.data);
+          const user = res.data.data
+          setUser(user)
+          navigate('/question-bank/view'); // Redirect to admin page upon successful login
+        } else {
+          alert("Incorrect Login");
+          console.log("Login failed:", res.data.message); // Log the error message
+        }
+      })
+      .catch(err => {
+        console.error("Error occurred:", err); // Log any network or server errors
       });
-      console.log(response.data)
-      if (response.data.success) {
-        navigate('/question-bank/view');
-      } else {
-        alert('Invalid credentials');
-      }
-    } catch (error) {
-      console.error('Error during authentication', error);
-      alert('Error during authentication');
-    }
   };
 
   return (
@@ -65,7 +67,7 @@ function StudentLogin() {
                 Email
               </Form.Label>
               <Col sm="8">
-                <Form.Control type="email" placeholder="Email" value={email} onChange={handleEmailChange} />
+                <Form.Control type="text" placeholder="username" value={username} onChange={handleUsernameChange} />
               </Col>
             </Form.Group>
 
