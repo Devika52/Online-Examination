@@ -17,11 +17,12 @@ import Teacher from './Teacher';
 import ViewQuestions from './questions/ViewQuestions';
 import Results from './results/Results';
 import StudentList from './StudentList';
-import TeacherList from './backend/TeacherList';
+import TeacherList from './TeacherList';
 import UpdateStudent from './UpdateStudent';
-import UpdateTeacher from './backend/UpdateTeacher';
+import UpdateTeacher from './UpdateTeacher';
 import DeleteStudent from './DeleteStudent';
 import DeleteTeacher from './DeleteTeacher';
+import ViewExamResults from './Examresults';
 import AddQuestion from './questions/AddQuestion';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -54,6 +55,7 @@ root.render(
         <Route path="/update-teacher" element={<UpdateTeacher/>}/>
         <Route path="/delete-student" element={<DeleteStudent/>}/>
         <Route path="/delete-teacher" element={<DeleteTeacher/>}/>
+        <Route path="/exam-results" element={<ViewExamResults/>}/>
       </Routes>
       </Router>
    

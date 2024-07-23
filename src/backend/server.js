@@ -331,6 +331,28 @@ app.get('/results/:userId', (req, res) => {
       }
   });
 });
+// server.js
+app.get('/exam-results', (req, res) => {
+  const query = `
+      SELECT 
+          answer_submission.id, 
+          answer_submission.marks, 
+          student.name AS student_name,
+          student.email AS student_email
+      FROM 
+          answer_submission
+      INNER JOIN 
+          student 
+      ON 
+          answer_submission.user_id = student.id`;
+
+  db.query(query, (err, results) => {
+      if (err) {
+          return res.status(500).json({ error: 'Database error' });
+      }
+      res.json({ success: true, results });
+  });
+});
 
 app.listen(8081, () => {
     console.log("Devika Listening on port 8081");

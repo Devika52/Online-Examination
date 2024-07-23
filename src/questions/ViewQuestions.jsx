@@ -47,6 +47,7 @@ const ViewQuestions = () => {
             user_id : current_user.id,
             formData : formData
         }
+        console.log("current user",current_user.name)
         axios.post(form_submit_url ,payload).then(response => {
             if(response.data.success){
                 console.log(response.data);

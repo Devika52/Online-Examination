@@ -46,7 +46,7 @@ function Teacher() {
     <Link to="/delete-student"><Button style={buttonStyle} className="ms-2 mb-2" variant="outline-info">Delete student</Button><br/></Link>
     <Link to="/student-list"><Button style={buttonStyle} className="ms-2 mb-2" variant="outline-info">View Student list</Button><br/></Link>
     <Button style={buttonStyle} className="ms-2 mb-2" variant="outline-info">Approval</Button><br/>
-    <Button style={buttonStyle} className="ms-2 mb-2" variant="outline-info">View exam result</Button>
+    <Link to="/exam-results"><Button style={buttonStyle} className="ms-2 mb-2" variant="outline-info">View exam result</Button></Link>
 </div>
 
                

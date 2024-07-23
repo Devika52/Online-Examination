@@ -53,7 +53,7 @@ function Admin() {
                     
                     <Link to='/question-bank/add'><Button style={buttonStyle}  className="ms-2 mb-2" variant="outline-info">Add Question</Button></Link><br/>
                     <Link to='/question-bank/view'><Button style={buttonStyle}  className="ms-2 mb-2" variant="outline-info">View Question</Button></Link><br/>
-                    <Button style={buttonStyle} className="ms-2 mb-2" variant="outline-info">View Exam Result</Button>
+                    <Link to="/exam-results"><Button style={buttonStyle} className="ms-2 mb-2" variant="outline-info">View Exam Result</Button></Link>
                 </div>
             </div>
         </div>
