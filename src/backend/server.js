@@ -28,7 +28,7 @@ const DB = mysql2
 // POST route for admin login
 app.post('/login',  (req, res) => {
   const { username, password } = req.body;
-  const sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+  const sql = "SELECT * FROM users WHERE email = ? AND password = ?";
    db.query(sql, [username, password], (err, data) => {
     if (err) {
       console.error('Database error:', err);
@@ -44,12 +44,13 @@ app.post('/login',  (req, res) => {
   });
 });
 app.post('/student/register', (req, res) => {
-  const { username, first_name,last_name, email, gender, dob, phno, address, password } = req.body;
+  const { firstName,lastName, email, gender, dob, phno, address, password } = req.body;
   console.log("Form Data",req.body)
   // Insert the student into the database
-  const query = 'INSERT INTO users (username,password,first_name,last_name, email, role,phone_no, gender, address, date_of_birth) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  const query = 'INSERT INTO users (password,first_name,last_name, email, role,phone_no, gender, address, date_of_birth) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
   console.log("phone number1",phno)
-  db.query(query, [fullName, username, password, first_name, last_name, email, 'nstudent',phno,gender,address,dob ], (err, results) => {
+  console.log("first name",firstName)
+  db.query(query, [password, firstName, lastName, email,'student',phno,  gender,address, dob ], (err, results) => {
     if (err) {
       console.error('Error occurred:', err);
       res.status(500).json({ message: 'Internal server error' });
@@ -60,12 +61,12 @@ app.post('/student/register', (req, res) => {
   });
 });
 app.post('/teacher/register', (req, res) => {
-  const { name, email, address, gender, phoneNumber, password } = req.body;
+  const { firstName,lastName, email, address, gender, phoneNumber, password,dob } = req.body;
 
   // Insert the teacher into the database
-  const query = 'INSERT INTO users (username,password,first_name,last_name, email, role,phone_no, gender, address, date_of_birth) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-  console.log("phone number1",phno)
-  db.query(query, [fullName, username, password, first_name, last_name, email, 'teacher',phno,gender,address,dob ], (err, results) => {
+  const query = 'INSERT INTO users (password,first_name,last_name, email, role,phone_no, gender, address, date_of_birth) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  console.log("phone number1",phoneNumber)
+  db.query(query, [password, firstName, lastName, email, 'teacher',phoneNumber,gender,address,dob ], (err, results) => {
     if (err) {
       console.error('Error occurred:', err);
       res.status(500).json({ message: 'Internal server error' });
@@ -162,7 +163,7 @@ app.post('/api/login', (req, res) => {
   });
 });
 app.get('/api/students', (req, res) => {
-  const query = 'SELECT student_id, name, email, ph_no, address, gender, dob FROM student';
+  const query = `SELECT id, first_name,last_name, email, phone_no, address, gender, date_of_birth FROM users where role='student' `;
   db.query(query, (err, results) => {
     if (err) {
       return res.status(500).send(err);
@@ -171,7 +172,7 @@ app.get('/api/students', (req, res) => {
   });
 });
 app.get('/api/teachers', (req, res) => {
-  const query = 'SELECT teacher_id, name, email, ph_no, gender, address FROM teacher';
+  const query = `SELECT id, first_name,last_name, email, phone_no, gender, address,date_of_birth FROM users where role='teacher'`;
   db.query(query, (err, results) => {
     if (err) {
       return res.status(500).send(err);
@@ -179,14 +180,16 @@ app.get('/api/teachers', (req, res) => {
     res.json(results);
   });
 });
-app.put('/api/students', (req, res) => {
-  const { email, name, ph_no, address, gender, dob } = req.body;
+app.put('/apii/students', (req, res) => {
+  console.log("update working...",req.body)
+  const { email, firstname,lastname, ph_no, address, gender, dob } = req.body;
+  
   const query = `
-    UPDATE student
-    SET name = ?, ph_no = ?, address = ?, gender = ?, dob = ?
+    UPDATE users
+    SET first_name = ?,last_name = ?, phone_no = ?, address = ?, gender = ?, date_of_birth = ?
     WHERE email = ?`;
 
-  db.query(query, [name, ph_no, address, gender, dob, email], (err, result) => {
+  db.query(query, [firstname,lastname, ph_no, address, gender, dob, email], (err, result) => {
     if (err) {
       return res.status(500).send(err);
     }
@@ -197,8 +200,9 @@ app.put('/api/students', (req, res) => {
   });
 });
 app.get('/api/students/:email', (req, res) => {
+  console.log("working update...")
   const { email } = req.params;
-  const query = 'SELECT student_id, name, email, ph_no, address, gender, dob FROM student WHERE email = ?';
+  const query = 'SELECT id, first_name,last_name, email, phone_no, address, gender, date_of_birth FROM users WHERE email = ?';
 
   db.query(query, [email], (err, results) => {
     if (err) {
@@ -207,13 +211,14 @@ app.get('/api/students/:email', (req, res) => {
     if (results.length === 0) {
       return res.status(404).send({ message: 'Student not found' });
     }
+    console.log(results[0]);
     res.send(results[0]);
   });
 });
 // New route to fetch teacher details by email
 app.get('/api/teachers/:email', (req, res) => {
   const { email } = req.params;
-  const query = 'SELECT teacher_id, name, email, ph_no, gender, address FROM teacher WHERE email = ?';
+  const query = 'SELECT id, first_name,last_name, email, phone_no, gender, address,date_of_birth FROM users WHERE email = ?';
 
   db.query(query, [email], (err, results) => {
     if (err) {
@@ -227,14 +232,15 @@ app.get('/api/teachers/:email', (req, res) => {
 });
 
 // New route to update teacher details
-app.put('/api/teachers', (req, res) => {
-  const { email, name, ph_no, gender, address } = req.body;
+app.put('/api/updateteachers', (req, res) => {
+  const { email, first_name,last_name, phone_no, gender, address,date_of_birth } = req.body;
+  console.log("update teachers...",req.body)
   const query = `
-    UPDATE teacher
-    SET name = ?, ph_no = ?, gender = ?, address = ?
+    UPDATE users
+    SET first_name = ?,last_name = ?, phone_no = ?, gender = ?, address = ?, date_of_birth = ?
     WHERE email = ?`;
 
-  db.query(query, [name, ph_no, gender, address, email], (err, result) => {
+  db.query(query, [first_name,last_name, phone_no, gender, address,date_of_birth, email], (err, result) => {
     if (err) {
       return res.status(500).send(err);
     }
@@ -245,9 +251,9 @@ app.put('/api/teachers', (req, res) => {
   });
 });
 // New route to delete a student by student_id
-app.delete('/api/students/:studentId', (req, res) => {
+app.delete('/api/deletestudents/:studentId', (req, res) => {
   const { studentId } = req.params;
-  const query = 'DELETE FROM student WHERE student_id = ?';
+  const query = 'DELETE FROM users WHERE id = ?';
 
   db.query(query, [studentId], (err, result) => {
     if (err) {
@@ -262,7 +268,7 @@ app.delete('/api/students/:studentId', (req, res) => {
 // New route to delete a teacher by teacher_id
 app.delete('/api/teachers/:teacherId', (req, res) => {
   const { teacherId } = req.params;
-  const query = 'DELETE FROM teacher WHERE teacher_id = ?';
+  const query = 'DELETE FROM users WHERE id = ?';
 
   db.query(query, [teacherId], (err, result) => {
     if (err) {
@@ -299,14 +305,15 @@ app.post('/teacher-login', (req, res) => {
   const { email, password, role } = req.body;
 
   if (role === 'Teacher') {
-    const query = 'SELECT * FROM teacher WHERE email = ? AND password = ?';
-    console.log("email and password",email,password)
+    const query = 'SELECT * FROM users WHERE email = ? AND password = ?';
+    console.log("email and password", email, password);
     db.query(query, [email, password], (err, results) => {
       if (err) {
         return res.status(500).json({ error: 'Database error' });
       }
       if (results.length > 0) {
-        res.json({ success: true });
+        const user = results[0];  // Assuming `results[0]` contains the user data
+        res.json({ success: true, user });  // Include user data in the response
       } else {
         res.status(401).json({ error: 'Invalid credentials' });
       }
@@ -315,6 +322,7 @@ app.post('/teacher-login', (req, res) => {
     res.status(400).json({ error: 'Invalid role' });
   }
 });
+
 // server.js
 app.get('/results/:userId', (req, res) => {
   const userId = req.params.userId;
@@ -351,6 +359,160 @@ app.get('/exam-results', (req, res) => {
           return res.status(500).json({ error: 'Database error' });
       }
       res.json({ success: true, results });
+  });
+});
+
+app.get('/api/users', (req, res) => {
+  const { role, status } = req.query;
+
+  if (role !== 'student' || status !== 'pending') {
+    return res.status(400).json({ error: 'Invalid query parameters' });
+  }
+
+  const query = `
+    SELECT 
+      id, first_name, last_name, email, role, phone_no, gender, address, date_of_birth
+    FROM 
+      users 
+    WHERE 
+      role = ? AND status = ?`;
+
+  db.query(query, [role, status], (err, results) => {
+    if (err) {
+      console.error('Error fetching data:', err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+
+    res.json(results);
+  });
+});
+
+// Approve a student
+app.post('/api/users/:id/approve', (req, res) => {
+  const { id } = req.params;
+  const query = 'UPDATE users SET status = ? WHERE id = ? AND role = ? AND status = ?';
+  db.query(query, ['approved', id, 'student', 'pending'], (err, results) => {
+    if (err) {
+      console.error('Error approving student:', err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ error: 'Student not found or already approved' });
+    }
+    res.status(200).json({ message: 'Student approved successfully' });
+  });
+});
+
+// Reject a student
+app.post('/api/users/:id/reject', (req, res) => {
+  const { id } = req.params;
+  const query = 'DELETE FROM users WHERE id = ? AND role = ? AND status = ?';
+
+  db.query(query, [id, 'student', 'pending'], (err, results) => {
+    if (err) {
+      console.error('Error deleting student:', err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ error: 'Student not found or already rejected' });
+    }
+    res.status(200).json({ message: 'Student rejected and deleted successfully' });
+  });
+});
+
+app.get('/users/status', (req, res) => {
+  const userId = req.query.user_id;
+  console.log("fetching students")
+  if (!userId) {
+    return res.status(400).json({ error: 'User ID is required' });
+  }
+
+  const query = 'SELECT status FROM users WHERE id = ?';
+
+  db.query(query, [userId], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Database query error' });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const status = results[0].status;
+    res.json({ status });
+  });
+});
+
+
+
+app.get('/api/teacherusers', (req, res) => {
+  const { role, status } = req.query;
+  const query = 'SELECT * FROM users WHERE role = ? AND status = ?';
+  
+  db.query(query, [role, status], (err, results) => {
+    if (err) {
+      console.error('Error fetching teachers:', err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    res.status(200).json(results);
+  });
+});
+
+// Approve teacher
+app.post('/api/teacherusers/:id/approve', (req, res) => {
+  const { id } = req.params;
+  const query = 'UPDATE users SET status = ? WHERE id = ? AND role = ? AND status = ?';
+  
+  db.query(query, ['approved', id, 'teacher', 'pending'], (err, results) => {
+    if (err) {
+      console.error('Error approving teacher:', err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ error: 'Teacher not found or already approved' });
+    }
+    res.status(200).json({ message: 'Teacher approved successfully' });
+  });
+});
+
+// Reject and delete teacher
+app.post('/api/teacherusers/:id/reject', (req, res) => {
+  const { id } = req.params;
+  const query = 'DELETE FROM users WHERE id = ? AND role = ? AND status = ?';
+
+  db.query(query, [id, 'teacher', 'pending'], (err, results) => {
+    if (err) {
+      console.error('Error rejecting teacher:', err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ error: 'Teacher not found or already rejected' });
+    }
+    res.status(200).json({ message: 'Teacher rejected and deleted successfully' });
+  });
+});
+
+app.get('/checkusers/status', (req, res) => {
+  const { user_id } = req.query;
+
+  if (!user_id) {
+    return res.status(400).json({ error: 'User ID is required' });
+  }
+
+  const query = 'SELECT status FROM users WHERE id = ? AND role = ?';
+  
+  db.query(query, [user_id, 'teacher'], (err, results) => {
+    if (err) {
+      console.error('Error fetching user status:', err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const { status } = results[0];
+    res.status(200).json({ status });
   });
 });
 
