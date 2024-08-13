@@ -24,7 +24,8 @@ import DeleteStudent from './DeleteStudent';
 import DeleteTeacher from './DeleteTeacher';
 import ViewExamResults from './Examresults';
 import AddQuestion from './questions/AddQuestion';
-
+import StudentApproval from './studentApproval';
+import TeacherApproval from './TeacherApproval';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
@@ -55,6 +56,8 @@ root.render(
         <Route path="/update-teacher" element={<UpdateTeacher/>}/>
         <Route path="/delete-student" element={<DeleteStudent/>}/>
         <Route path="/delete-teacher" element={<DeleteTeacher/>}/>
+        <Route path="/student-Approval" element={<StudentApproval/>}/>
+        <Route path="/teacher-Approval" element={<TeacherApproval/>}/>
         <Route path="/exam-results" element={<ViewExamResults/>}/>
       </Routes>
       </Router>

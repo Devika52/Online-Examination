@@ -11,10 +11,15 @@ function UpdateTeacher() {
 
   const handleCheck = (e) => {
     e.preventDefault();
-
+  
     axios.get(`http://localhost:8081/api/teachers/${email}`)
       .then(response => {
-        setTeacher(response.data);
+        const fetchedTeacher = response.data;
+        if (fetchedTeacher.date_of_birth) {
+          // Ensure date format is compatible with <input type="date">
+          fetchedTeacher.date_of_birth = new Date(fetchedTeacher.date_of_birth).toISOString().split('T')[0];
+        }
+        setTeacher(fetchedTeacher);
         setMessage('');
       })
       .catch(error => {
@@ -22,18 +27,20 @@ function UpdateTeacher() {
         setTeacher(null);
       });
   };
-
+  
   const handleUpdate = (e) => {
     e.preventDefault();
 
     if (!teacher) return;
 
-    axios.put('http://localhost:8081/api/teachers', {
+    axios.put('http://localhost:8081/api/updateteachers', {
       email: teacher.email,
-      name: teacher.name,
-      ph_no: teacher.ph_no,
+      first_name: teacher.first_name,
+      last_name: teacher.last_name,
+      phone_no: teacher.phone_no,
       gender: teacher.gender,
       address: teacher.address,
+      date_of_birth: teacher.date_of_birth
     })
     .then(response => {
       setMessage(response.data.message);
@@ -73,12 +80,23 @@ function UpdateTeacher() {
       {teacher && (
         <form onSubmit={handleUpdate}>
           <div className="mb-3">
-            <label className="form-label">Name</label>
+            <label className="form-label">First Name</label>
             <input
               type="text"
               className="form-control"
-              name="name"
-              value={teacher.name}
+              name="first_name"
+              value={teacher.first_name}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Last Name</label>
+            <input
+              type="text"
+              className="form-control"
+              name="last_name"
+              value={teacher.last_name}
               onChange={handleChange}
               required
             />
@@ -88,8 +106,8 @@ function UpdateTeacher() {
             <input
               type="text"
               className="form-control"
-              name="ph_no"
-              value={teacher.ph_no}
+              name="phone_no"
+              value={teacher.phone_no}
               onChange={handleChange}
               required
             />
@@ -112,6 +130,17 @@ function UpdateTeacher() {
               className="form-control"
               name="address"
               value={teacher.address}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Date of Birth</label>
+            <input
+              type="date"
+              className="form-control"
+              name="date_of_birth"
+              value={teacher.date_of_birth}
               onChange={handleChange}
               required
             />

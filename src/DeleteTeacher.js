@@ -37,6 +37,12 @@ function DeleteTeacher() {
     navigate(-1); // Navigate back to the previous page
   };
 
+  // Function to format date in YYYY-MM-DD format
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-CA'); // 'en-CA' is YYYY-MM-DD format
+  };
+
   return (
     <div className="container mt-5">
       <h2 className="mb-4">Delete Teacher</h2>
@@ -47,25 +53,29 @@ function DeleteTeacher() {
         <thead>
           <tr>
             <th>Teacher ID</th>
-            <th>Name</th>
+            <th>First Name</th>
+            <th>Last Name</th>
             <th>Email</th>
             <th>Phone Number</th>
             <th>Address</th>
             <th>Gender</th>
+            <th>Date of Birth</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
           {teachers.map(teacher => (
-            <tr key={teacher.teacher_id}>
-              <td>{teacher.teacher_id}</td>
-              <td>{teacher.name}</td>
+            <tr key={teacher.id}>
+              <td>{teacher.id}</td>
+              <td>{teacher.first_name}</td>
+              <td>{teacher.last_name}</td>
               <td>{teacher.email}</td>
-              <td>{teacher.ph_no}</td>
+              <td>{teacher.phone_no}</td>
               <td>{teacher.address}</td>
               <td>{teacher.gender}</td>
+              <td>{formatDate(teacher.date_of_birth)}</td>
               <td>
-                <button className="btn btn-danger" onClick={() => handleDelete(teacher.teacher_id)}>Delete</button>
+                <button className="btn btn-danger" onClick={() => handleDelete(teacher.id)}>Delete</button>
               </td>
             </tr>
           ))}

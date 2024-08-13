@@ -32,21 +32,25 @@ function TeacherList() {
         <thead>
           <tr>
             <th>Teacher ID</th>
-            <th>Name</th>
+            <th>First Name</th>
+            <th>Last Name</th>
             <th>Email</th>
             <th>Phone Number</th>
             <th>Gender</th>
+            <th>Date of Birth</th>
             <th>Address</th>
           </tr>
         </thead>
         <tbody>
           {teachers.map(teacher => (
-            <tr key={teacher.teacher_id}>
-              <td>{teacher.teacher_id}</td>
-              <td>{teacher.name}</td>
+            <tr key={teacher.id}>
+              <td>{teacher.id}</td>
+              <td>{teacher.first_name}</td>
+              <td>{teacher.last_name}</td>
               <td>{teacher.email}</td>
-              <td>{teacher.ph_no}</td>
+              <td>{teacher.phone_no}</td>
               <td>{teacher.gender}</td>
+              <td>{teacher.date_of_birth}</td>
               <td>{teacher.address}</td>
             </tr>
           ))}

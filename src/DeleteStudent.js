@@ -15,15 +15,34 @@ function DeleteStudent() {
   const fetchStudents = () => {
     axios.get('http://localhost:8081/api/students')
       .then(response => {
-        setStudents(response.data);
+        // Format date of birth for each student
+        const formattedStudents = response.data.map(student => {
+          let formattedDateOfBirth = '';
+          if (student.date_of_birth) {
+            const date = new Date(student.date_of_birth);
+            // Check if the date is valid
+            if (!isNaN(date.getTime())) {
+              formattedDateOfBirth = date.toISOString().split('T')[0];
+            } else {
+              console.error('Invalid date:', student.date_of_birth);
+            }
+          }
+          return {
+            ...student,
+            date_of_birth: formattedDateOfBirth
+          };
+        });
+        setStudents(formattedStudents);
+        console.log("Formatted students:", formattedStudents);
       })
       .catch(error => {
         console.error('There was an error fetching the student data!', error);
       });
   };
-
+  
   const handleDelete = (studentId) => {
-    axios.delete(`http://localhost:8081/api/students/${studentId}`)
+    console.log(studentId)
+    axios.delete(`http://localhost:8081/api/deletestudents/${studentId}`)
       .then(response => {
         setMessage(response.data.message);
         fetchStudents(); // Refresh the student list
@@ -47,7 +66,8 @@ function DeleteStudent() {
         <thead>
           <tr>
             <th>Student ID</th>
-            <th>Name</th>
+            <th>First Name</th>
+            <th>Last Name</th>
             <th>Email</th>
             <th>Phone Number</th>
             <th>Address</th>
@@ -58,16 +78,17 @@ function DeleteStudent() {
         </thead>
         <tbody>
           {students.map(student => (
-            <tr key={student.student_id}>
-              <td>{student.student_id}</td>
-              <td>{student.name}</td>
+            <tr key={student.id}>
+              <td>{student.id}</td>
+              <td>{student.first_name}</td>
+              <td>{student.last_name}</td>
               <td>{student.email}</td>
-              <td>{student.ph_no}</td>
+              <td>{student.phone_no}</td>
               <td>{student.address}</td>
               <td>{student.gender}</td>
-              <td>{student.dob}</td>
+              <td>{student.date_of_birth}</td>
               <td>
-                <button className="btn btn-danger" onClick={() => handleDelete(student.student_id)}>Delete</button>
+                <button className="btn btn-danger" onClick={() => handleDelete(student.id)}>Delete</button>
               </td>
             </tr>
           ))}

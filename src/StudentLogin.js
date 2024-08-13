@@ -7,7 +7,8 @@ import Row from 'react-bootstrap/Row';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Registration.css';
 import { setUser } from './hooks/useAuth';
-
+import { Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 function StudentLogin() {
   const [role, setRole] = useState('Student'); // Default role set to Student
   const [username, setUsername] = useState('');
@@ -53,6 +54,9 @@ function StudentLogin() {
     <div className="background-image">
       <div className="d-flex justify-content-center align-items-center vh-100">
         <div className="border p-4" style={{ backgroundColor: 'white', borderRadius: '10px' }}>
+        <div className="d-flex justify-content-center mb-3">
+          <Link to="/"><Button variant="secondary">Back</Button></Link>
+        </div>
           <div className="text-center mb-4">
             <select value={role} onChange={handleRoleChange} className="form-select">
               <option value="Student">Student</option>
@@ -60,6 +64,7 @@ function StudentLogin() {
               <option value="Teacher">Teacher</option>
             </select>
           </div>
+          
           <h1 className="text-center mb-4">Student Login</h1>
           <Form onSubmit={handleLogin} style={{ backgroundColor: 'white', padding: '20px', borderRadius: '10px' }}>
             <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">

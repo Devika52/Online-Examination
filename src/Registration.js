@@ -7,13 +7,15 @@ import { Link } from 'react-router-dom';
 
 function Registration() {
   const [formData, setFormData] = useState({
-    name: '',
+    firstName: '',
+    lastName:'',
     email: '',
     address: '',
     gender: 'Male',
     phoneNumber: '',
     password: '',
     confirmPassword: '',
+    dob:''
   });
 
   const [message, setMessage] = useState('');
@@ -45,13 +47,15 @@ function Registration() {
 
   const handleReset = () => {
     setFormData({
-      name: '',
+      firstName: '',
+      lastName:'',
       email: '',
       address: '',
       gender: 'Male',
       phoneNumber: '',
       password: '',
       confirmPassword: '',
+      dob:''
     });
     setMessage('');
     setMessageType('');
@@ -62,25 +66,37 @@ function Registration() {
       <div className="registration-form mt-5">
         <div className="text-center mb-4 ">
           <Link to="/">
-            <Button variant="outline-info">Back</Button>
+            <Button variant="secondary">Back</Button>
           </Link>
         </div>
         <h1 className="text-center">Teacher's Registration</h1>
         <Form onSubmit={handleSubmit}>
           <Row>
             <Form.Group as={Col} controlId="formGridName">
-              <Form.Label>Name</Form.Label>
+              <Form.Label>First Name</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter your name"
-                name="name"
-                value={formData.name}
+                placeholder="Enter Your First Name"
+                name="firstName"
+                value={formData.firstName}
                 onChange={handleChange}
                 required
               />
             </Form.Group>
           </Row>
-
+          <Row>
+            <Form.Group as={Col} controlId="formGridName">
+              <Form.Label>Last Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter your Last Name"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
+          </Row>
           <Row>
             <Form.Group as={Col} controlId="formGridEmail">
               <Form.Label>Email</Form.Label>
@@ -139,6 +155,19 @@ function Registration() {
               />
             </Form.Group>
           </Row>
+          <Row>
+  <Form.Group as={Col} controlId="formGridDob">
+    <Form.Label>Date of Birth</Form.Label>
+    <Form.Control
+      type="date"
+      placeholder="Enter your date of birth"
+      name="dob"
+      value={formData.dob}
+      onChange={handleChange}
+      required
+    />
+  </Form.Group>
+</Row>
 
           <Row>
             <Form.Group as={Col} controlId="formGridPassword">

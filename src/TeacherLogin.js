@@ -1,42 +1,41 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './Registration.css';
 import axios from 'axios';
+import { Form, Col, Row, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import { setUser } from './hooks/useAuth';  // Import setUser from the useAuth hook
 
 function TeacherLogin() {
-  const [role, setRole] = useState('Teacher'); // Default role set to Teacher
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate(); // Hook to navigate programmatically
-
-  const handleRoleChange = (e) => {
-    const selectedRole = e.target.value;
-    setRole(selectedRole);
-
-    // Redirect based on the selected role
-    if (selectedRole === 'Student') {
-      navigate('/student-login');
-    } else if (selectedRole === 'Admin') {
-      navigate('/');
-    }
-  };
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:8081/teacher-login', { email, password, role })
+
+    if (!email || !password) {
+      setErrorMessage('Please fill in all fields.');
+      return;
+    }
+
+    setIsLoading(true);
+    axios.post('http://localhost:8081/teacher-login', { email, password, role: 'Teacher' })
       .then((response) => {
+        setIsLoading(false);
         if (response.data.success) {
+          setUser(response.data.user);  // Use setUser to store the user data
+          console.log("asdfasdf",response.data.user);
+          console.log("user",response.data.success);
           navigate('/teacher');
         } else {
-          alert('Invalid credentials');
+          setErrorMessage(response.data.message || 'Invalid credentials');
         }
       })
       .catch((error) => {
-        alert('An error occurred');
+        setIsLoading(false);
+        setErrorMessage('An error occurred. Please try again.');
         console.error(error);
       });
   };
@@ -45,14 +44,11 @@ function TeacherLogin() {
     <div className="background-image">
       <div className="d-flex justify-content-center align-items-center vh-100">
         <div className="border p-4" style={{ backgroundColor: 'white', borderRadius: '10px' }}>
-          <div className="text-center mb-4">
-            <select value={role} onChange={handleRoleChange} className="form-select">
-              <option value="Student">Student</option>
-              <option value="Admin">Admin</option>
-              <option value="Teacher">Teacher</option>
-            </select>
+          <div className="d-flex justify-content-center mb-3">
+            <Link to="/"><Button variant="secondary">Back</Button></Link>
           </div>
           <h1 className="text-center mb-4">Teacher's Login</h1>
+          {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
           <Form onSubmit={handleSubmit}>
             <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
               <Form.Label column sm="4">
@@ -64,6 +60,7 @@ function TeacherLogin() {
                   placeholder="Email" 
                   value={email} 
                   onChange={(e) => setEmail(e.target.value)} 
+                  required
                 />
               </Col>
             </Form.Group>
@@ -78,12 +75,15 @@ function TeacherLogin() {
                   placeholder="Password" 
                   value={password} 
                   onChange={(e) => setPassword(e.target.value)} 
+                  required
                 />
               </Col>
             </Form.Group>
 
             <div className="d-grid">
-              <button type="submit" className="btn btn-primary">Submit</button>
+              <Button type="submit" variant="primary" disabled={isLoading}>
+                {isLoading ? 'Logging in...' : 'Submit'}
+              </Button>
             </div>
           </Form>
         </div>

@@ -6,7 +6,8 @@ import './studentregister.css';
 
 function StudentRegistration() {
   const [formData, setFormData] = useState({
-    fullName: '',
+    firstName: '',
+    lastName: '',
     email: '',
     gender: 'male',
     dob: '',
@@ -34,6 +35,7 @@ function StudentRegistration() {
     }
 
     try {
+      console.log(formData)
       const response = await axios.post('http://localhost:8081/student/register', formData);
       setMessage(response.data.message); // Assuming the backend sends a message in response
       setMessageType('success');
@@ -45,7 +47,8 @@ function StudentRegistration() {
 
   const handleReset = () => {
     setFormData({
-      fullName: '',
+      firstName: '',
+      lastName: '',
       email: '',
       gender: 'male',
       dob: '',
@@ -67,12 +70,22 @@ function StudentRegistration() {
       </div>
       <h2 className="text-center">Student Registration Form</h2>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="fullName">Full Name</label>
+        <label htmlFor="firstName">First Name</label>
         <input
           type="text"
-          id="fullName"
-          name="fullName"
-          value={formData.fullName}
+          id="firstName"
+          name="firstName"
+          value={formData.firstName}
+          onChange={handleChange}
+          required
+        />
+
+        <label htmlFor="lastName">Last Name</label>
+        <input
+          type="text"
+          id="lastName"
+          name="lastName"
+          value={formData.lastName}
           onChange={handleChange}
           required
         />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
@@ -14,7 +14,12 @@ function UpdateStudent() {
 
     axios.get(`http://localhost:8081/api/students/${email}`)
       .then(response => {
-        setStudent(response.data);
+        const fetchedStudent = response.data;
+        if (fetchedStudent.date_of_birth) {
+          // Ensure date format is compatible with <input type="date">
+          fetchedStudent.date_of_birth = new Date(fetchedStudent.date_of_birth).toISOString().split('T')[0];
+        }
+        setStudent(fetchedStudent);
         setMessage('');
       })
       .catch(error => {
@@ -25,25 +30,31 @@ function UpdateStudent() {
 
   const handleUpdate = (e) => {
     e.preventDefault();
-
+  
     if (!student) return;
-
-    axios.put('http://localhost:8081/api/students', {
+  
+    const updateData = {
       email: student.email,
-      name: student.name,
-      ph_no: student.ph_no,
+      firstname: student.first_name,
+      lastname: student.last_name,
+      ph_no: student.phone_no,  // Ensure this field is correct
       address: student.address,
       gender: student.gender,
-      dob: student.dob,
-    })
-    .then(response => {
-      setMessage(response.data.message);
-    })
-    .catch(error => {
-      setMessage(error.response ? error.response.data.message : 'Error updating student details');
-    });
+      dob: student.date_of_birth,  // Ensure this is in the correct format
+    };
+    console.log("firstname",student.first_name);
+    console.log('Update data:', updateData);  // Debugging data
+  
+    axios.put('http://localhost:8081/apii/students', updateData)
+      .then(response => {
+        setMessage(response.data.message);
+      })
+      .catch(error => {
+        console.error('Update error:', error);  // Detailed error logging
+        setMessage(error.response ? error.response.data.message : 'Error updating student details');
+      });
   };
-
+  
   const handleBack = () => {
     navigate(-1); // Navigate back to the previous page
   };
@@ -54,7 +65,7 @@ function UpdateStudent() {
 
   return (
     <div className="container mt-5">
-         <div className="d-flex justify-content-center mb-4">
+      <div className="d-flex justify-content-center mb-4">
         <button className="btn btn-secondary back-button" onClick={handleBack}>Back</button>
       </div>
       <h2 className="mb-4">Update Student Details</h2>
@@ -74,12 +85,23 @@ function UpdateStudent() {
       {student && (
         <form onSubmit={handleUpdate}>
           <div className="mb-3">
-            <label className="form-label">Name</label>
+            <label className="form-label">First Name</label>
             <input
               type="text"
               className="form-control"
-              name="name"
-              value={student.name}
+              name="first_name"
+              value={student.first_name}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Last Name</label>
+            <input
+              type="text"
+              className="form-control"
+              name="last_name"
+              value={student.last_name}
               onChange={handleChange}
               required
             />
@@ -90,7 +112,7 @@ function UpdateStudent() {
               type="text"
               className="form-control"
               name="ph_no"
-              value={student.ph_no}
+              value={student.phone_no}
               onChange={handleChange}
               required
             />
@@ -122,8 +144,8 @@ function UpdateStudent() {
             <input
               type="date"
               className="form-control"
-              name="dob"
-              value={student.dob}
+              name="date_of_birth"
+              value={student.date_of_birth}
               onChange={handleChange}
               required
             />

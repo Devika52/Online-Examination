@@ -41,12 +41,12 @@ function Admin() {
                 <Link to="/"><Button style={buttonStyle} className="ms-2 mb-2" variant="outline-info">Back</Button></Link>
                 <h1 style={{ color: '#fff' }}>Admin</h1>
                 <div>
-                    <Button style={buttonStyle} className="ms-2 mb-2" variant="outline-info">Student Approval</Button><br/>
+                    <Link to="/student-Approval"><Button style={buttonStyle} className="ms-2 mb-2" variant="outline-info">Student Approval</Button><br/></Link>
                     <Link to="/update-student"><Button style={buttonStyle} className="ms-2 mb-2" variant="outline-info">Update Student</Button><br/></Link>
                     <Link to="/delete-student"><Button style={buttonStyle} className="ms-2 mb-2" variant="outline-info">Delete Student</Button><br/></Link>
                     <Link to="/student-list"><Button style={buttonStyle} className="ms-2 mb-2" variant="outline-info">View Student List</Button><br/></Link>
 
-                    <Button style={buttonStyle} className="ms-2 mb-2" variant="outline-info">Teacher Approval</Button><br/>
+                    <Link to="/teacher-Approval"><Button style={buttonStyle} className="ms-2 mb-2" variant="outline-info">Teacher Approval</Button><br/></Link>
                     <Link to="/update-teacher"><Button style={buttonStyle} className="ms-2 mb-2" variant="outline-info">Update Teacher</Button><br/></Link>
                     <Link to="/delete-teacher"><Button style={buttonStyle} className="ms-2 mb-2" variant="outline-info">Delete Teacher</Button><br/></Link>
                     <Link to="/teacher-list"><Button style={buttonStyle} className="ms-2 mb-2" variant="outline-info">View Teacher List</Button><br/></Link>

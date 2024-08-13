@@ -32,7 +32,8 @@ function StudentList() {
         <thead>
           <tr>
             <th>Student ID</th>
-            <th>Name</th>
+            <th>First Name</th>
+            <th>Last Name</th>
             <th>Email</th>
             <th>Phone Number</th>
             <th>Address</th>
@@ -42,14 +43,15 @@ function StudentList() {
         </thead>
         <tbody>
           {students.map(student => (
-            <tr key={student.student_id}>
-              <td>{student.student_id}</td>
-              <td>{student.name}</td>
+            <tr key={student.id}>
+              <td>{student.id}</td>
+              <td>{student.first_name}</td>
+              <td>{student.last_name}</td>
               <td>{student.email}</td>
-              <td>{student.ph_no}</td>
+              <td>{student.phone_no}</td>
               <td>{student.address}</td>
               <td>{student.gender}</td>
-              <td>{student.dob}</td>
+              <td>{student.date_of_birth}</td>
             </tr>
           ))}
         </tbody>
