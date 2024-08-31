@@ -29,13 +29,12 @@ function Teacher() {
 
     if (user) {
       checkStatus();
-      console.log("asdf",user)
     } else {
       navigate('/'); // Redirect if no user data is available
     }
   }, [user, navigate]);
 
-  const backgroundImageUrl = 'https://img.freepik.com/free-photo/2d-graphic-colorful-wallpaper-with-grainy-gradients_23-2151001571.jpg?t=st=1720328601~exp=1720332201~hmac=3f6029e17fbdc4be63e68c9e2ee7675a222d7e156aafc71538dccb540ac0d561&w=900';
+  const backgroundImageUrl = 'https://kristujayanti.edu.in/images/clg_history.jpg';
   const backgroundStyle = {
     backgroundImage: `url(${backgroundImageUrl})`,
     backgroundSize: 'cover',
@@ -49,9 +48,9 @@ function Teacher() {
   const containerStyle = {
     padding: '60px',
     borderRadius: '20px',
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
     border: '1px solid rgba(0, 0, 0, 0.8)',
-    color: '#fff',
+    color: '#000', // Change text color to black for better contrast
     width: '30%',
     textAlign: 'center',
   };
@@ -64,7 +63,7 @@ function Teacher() {
     return (
       <div style={backgroundStyle}>
         <div style={containerStyle}>
-          <h1 style={{ color: '#fff' }}>You have to be approved by the admin</h1>
+          <h1 style={{ color: '#000' }}>You have to be approved by the admin</h1> {/* Adjust text color */}
           <Link to="/"><Button style={buttonStyle} variant="outline-info">Back</Button></Link>
         </div>
       </div>
@@ -75,14 +74,14 @@ function Teacher() {
     return (
       <div style={backgroundStyle}>
         <div style={containerStyle}>
-          <Link to="/"><Button style={buttonStyle} className="ms-2 mb-2" variant="outline-info">Back</Button></Link>
-          <h1 style={{ color: '#fff' }}>Teacher</h1>
+          <Link to="/"><Button style={buttonStyle} className="ms-2 mb-2" variant="secondary">Back</Button></Link>
+          <h1 style={{ color: '#000' }}>Teacher</h1> {/* Adjust text color */}
           <div>
-            <Link to="/update-student"><Button style={buttonStyle} className="ms-2 mb-2" variant="outline-info">Update Student</Button><br /></Link>
-            <Link to="/delete-student"><Button style={buttonStyle} className="ms-2 mb-2" variant="outline-info">Delete student</Button><br /></Link>
-            <Link to="/student-list"><Button style={buttonStyle} className="ms-2 mb-2" variant="outline-info">View Student list</Button><br /></Link>
-            <Button style={buttonStyle} className="ms-2 mb-2" variant="outline-info">Approval</Button><br />
-            <Link to="/exam-results"><Button style={buttonStyle} className="ms-2 mb-2" variant="outline-info">View exam result</Button></Link>
+            <Link to="/update-student"><Button style={buttonStyle} className="ms-2 mb-2" variant="secondary">Update Student</Button><br /></Link>
+            <Link to="/delete-student"><Button style={buttonStyle} className="ms-2 mb-2" variant="secondary">Delete student</Button><br /></Link>
+            <Link to="/student-list"><Button style={buttonStyle} className="ms-2 mb-2" variant="secondary">View Student list</Button><br /></Link>
+            <Button style={buttonStyle} className="ms-2 mb-2" variant="secondary">Approval</Button><br />
+            <Link to="/exam-results"><Button style={buttonStyle} className="ms-2 mb-2" variant="secondary">View exam result</Button></Link>
           </div>
         </div>
       </div>

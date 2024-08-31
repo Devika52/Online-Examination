@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Button, Table, Container, Row, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
-
+import './YourStyles.css';
 const StudentApproval = () => {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -64,7 +64,7 @@ const StudentApproval = () => {
         borderRadius: '8px' 
       }}>
        <div className="d-flex justify-content-center mt-4">
-          <Button variant="secondary" onClick={handleBack}>Back</Button>
+          <Button variant="secondary"  onClick={handleBack}>Back</Button>
         </div>
         <h1>Pending Student Approvals</h1>
         {students.length === 0 ? (

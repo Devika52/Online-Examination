@@ -26,6 +26,7 @@ import ViewExamResults from './Examresults';
 import AddQuestion from './questions/AddQuestion';
 import StudentApproval from './studentApproval';
 import TeacherApproval from './TeacherApproval';
+import ViewFeedback from './ViewFeedback';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
@@ -59,6 +60,7 @@ root.render(
         <Route path="/student-Approval" element={<StudentApproval/>}/>
         <Route path="/teacher-Approval" element={<TeacherApproval/>}/>
         <Route path="/exam-results" element={<ViewExamResults/>}/>
+        <Route path="/feedback" element={<ViewFeedback/>}/>
       </Routes>
       </Router>
    

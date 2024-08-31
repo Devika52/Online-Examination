@@ -515,6 +515,29 @@ app.get('/checkusers/status', (req, res) => {
     res.status(200).json({ status });
   });
 });
+app.post('/api/feedback', (req, res) => {
+  const { id, email, phone, feedback } = req.body;
+
+  const query = 'INSERT INTO feedback (id, email, ph_no, feedback) VALUES (?, ?, ?, ?)';
+
+  db.query(query, [id, email, phone, feedback], (err, results) => {
+    if (err) {
+      console.error('Error inserting feedback:', err);
+      return res.status(500).json({ success: false, error: 'Failed to insert feedback' });
+    }
+    res.status(200).json({ success: true, message: 'Feedback submitted successfully' });
+  });
+});
+app.get('/feedback', (req, res) => {
+  db.query('SELECT * FROM feedback', (error, results) => {
+    if (error) {
+      console.error('Error fetching feedback:', error);
+      res.json({ success: false, error: 'Failed to fetch feedback' });
+    } else {
+      res.json({ success: true, feedbacks: results });
+    }
+  });
+});
 
 app.listen(8081, () => {
     console.log("Devika Listening on port 8081");
