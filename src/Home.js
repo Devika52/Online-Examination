@@ -31,7 +31,7 @@ function Home() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    axios.post('http://localhost:8081/login', { username, password })
+    axios.post('http://localhost:8081/adminlogin', { username, password })
       .then(res => {
         
         if (res.data.success) {

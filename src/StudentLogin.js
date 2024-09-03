@@ -32,7 +32,7 @@ function StudentLogin() {
 
   const handleLogin = (event) => {
     event.preventDefault();
-    axios.post('http://localhost:8081/login', { username, password })
+    axios.post('http://localhost:8081/student-login', { username, password })
       .then(res => {
         
         if (res.data.success) {

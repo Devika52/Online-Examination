@@ -26,9 +26,28 @@ const DB = mysql2
 
 
 // POST route for admin login
-app.post('/login',  (req, res) => {
+app.post('/adminlogin',  (req, res) => {
   const { username, password } = req.body;
-  const sql = "SELECT * FROM users WHERE email = ? AND password = ?";
+  const sql = "SELECT * FROM users WHERE email = ? AND password = ? AND role='admin'";
+  console.log("student or admin 1")
+   db.query(sql, [username, password], (err, data) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+    if (data.length > 0) {
+      console.log(data[0]);
+      return res.json({ success: true, message: 'Login successful', data:data[0] });
+    } else {
+      console.log('Login failed: No record found');
+      return res.json({ success: false, message: 'Invalid username or password' });
+    }
+  });
+});
+app.post('/student-login',  (req, res) => {
+  const { username, password } = req.body;
+  const sql = "SELECT * FROM users WHERE email = ? AND password = ? AND  role='student'";
+  console.log("student or admin 1")
    db.query(sql, [username, password], (err, data) => {
     if (err) {
       console.error('Database error:', err);
@@ -305,7 +324,7 @@ app.post('/teacher-login', (req, res) => {
   const { email, password, role } = req.body;
 
   if (role === 'Teacher') {
-    const query = 'SELECT * FROM users WHERE email = ? AND password = ?';
+    const query = "SELECT * FROM users WHERE email = ? AND password = ? AND role='teacher'";
     console.log("email and password", email, password);
     db.query(query, [email, password], (err, results) => {
       if (err) {
