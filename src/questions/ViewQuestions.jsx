@@ -12,38 +12,20 @@ const ViewQuestions = () => {
   const navigate = useNavigate();
   const current_user = getUser();
   const [questions, setQuestions] = useState([]);
+  const [showQuestions, setShowQuestions] = useState(false);
   const [timeOut, setTimeOut] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
 
   useEffect(() => {
-    const fetchQuestions = async () => {
-      try {
-        const response = await axios.get(fetch_api_url);
-        if (!response) throw new Error('Network response was not ok');
-        const data = response.data;
-        if (typeof data === 'object') {
-          setQuestions(data.results);
-        }
-      } catch (error) {
-        console.error('Error fetching questions:', error);
-      }
-    };
-
     const checkUserStatus = async () => {
       try {
-        console.log("working front student")
-        console.log(current_user.id)
         const response = await axios.get(user_status_url, {
           params: { user_id: current_user.id },
         });
         if (response.data.status === 'pending') {
-            console.log(response.data.status)
           setStatusMessage('You have to be approved by the admin');
-          // Optionally, you can use `window.alert` if you prefer an alert box
-           
         } else {
-          // Fetch questions only if the status is approved
-          fetchQuestions();
+          // No need to fetch questions until the "Start Exam" button is clicked
         }
       } catch (error) {
         console.error('Error fetching user status:', error);
@@ -51,11 +33,23 @@ const ViewQuestions = () => {
     };
 
     checkUserStatus();
-  }, [fetch_api_url, user_status_url, current_user.id]);
+  }, [user_status_url, current_user.id]);
 
-  const Completionist = () => {
-    return <span>Time's Up !!!</span>;
+  const startExam = async () => {
+    try {
+      const response = await axios.get(fetch_api_url);
+      if (!response) throw new Error('Network response was not ok');
+      const data = response.data;
+      if (typeof data === 'object') {
+        setQuestions(data.results);
+        setShowQuestions(true);
+      }
+    } catch (error) {
+      console.error('Error fetching questions:', error);
+    }
   };
+
+  const Completionist = () => <span>Time's Up !!!</span>;
 
   const handleComplete = () => {
     setTimeOut(true);
@@ -83,42 +77,51 @@ const ViewQuestions = () => {
   return (
     <div className="container">
       <div className="d-flex justify-content-center mb-4">
-        <button className="btn btn-secondary back-button" onClick={handleBack}>
+        <Button className="btn btn-secondary back-button" onClick={handleBack}>
           Back
-        </button>
+        </Button>
       </div>
       {statusMessage ? (
-        <Alert variant="danger">
-          {statusMessage}
-        </Alert>
+        <Alert variant="danger">{statusMessage}</Alert>
       ) : (
         <>
-          {!timeOut && (
-            <h3>
-              Time Remaining:{' '}
-              <Countdown date={Date.now() + 60000} onComplete={handleComplete} />
-            </h3>
+          {!showQuestions ? (
+            <div className="text-center">
+              <h3>Start the Exam</h3>
+              <Button variant="primary" onClick={startExam} className="mt-3">
+                Start Now
+              </Button>
+            </div>
+          ) : (
+            <>
+              {!timeOut && (
+                <h3>
+                  Time Remaining:{' '}
+                  <Countdown date={Date.now() + 60000} onComplete={handleComplete} />
+                </h3>
+              )}
+              {timeOut && <h3 style={{ color: 'red' }}>Time's Up</h3>}
+              <br />
+              <Form onSubmit={handleSubmit}>
+                {questions.length > 0 &&
+                  questions.map((question, index) => (
+                    <React.Fragment key={index}>
+                      <Form.Group className="mb-3">
+                        <Form.Label>{`${index + 1}. ${question.question}`}</Form.Label>
+                        <Form.Check type="radio" name={question.id} value={question.option_1} label={question.option_1} />
+                        <Form.Check type="radio" name={question.id} value={question.option_2} label={question.option_2} />
+                        <Form.Check type="radio" name={question.id} value={question.option_3} label={question.option_3} />
+                        <Form.Check type="radio" name={question.id} value={question.option_4} label={question.option_4} />
+                      </Form.Group>
+                      <br />
+                    </React.Fragment>
+                  ))}
+                <Button type="submit" disabled={timeOut}>
+                  Submit form
+                </Button>
+              </Form>
+            </>
           )}
-          {timeOut && <h3 style={{ color: 'red' }}>Time's Up</h3>}
-          <br />
-          <Form onSubmit={handleSubmit}>
-            {questions.length > 0 &&
-              questions.map((question, index) => (
-                <React.Fragment key={index}>
-                  <Form.Group className="mb-3">
-                    <Form.Label>{`${index + 1}. ${question.question}`}</Form.Label>
-                    <Form.Check type="radio" name={question.id} value={question.option_1} label={question.option_1} />
-                    <Form.Check type="radio" name={question.id} value={question.option_2} label={question.option_2} />
-                    <Form.Check type="radio" name={question.id} value={question.option_3} label={question.option_3} />
-                    <Form.Check type="radio" name={question.id} value={question.option_4} label={question.option_4} />
-                  </Form.Group>
-                  <br />
-                </React.Fragment>
-              ))}
-            <Button type="submit" disabled={timeOut}>
-              Submit form
-            </Button>
-          </Form>
         </>
       )}
     </div>

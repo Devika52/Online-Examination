@@ -360,26 +360,34 @@ app.get('/results/:userId', (req, res) => {
 });
 // server.js
 app.get('/exam-results', (req, res) => {
+  console.log("Exam results route accessed..");
+
   const query = `
       SELECT 
           answer_submission.id, 
           answer_submission.marks, 
-          student.name AS student_name,
-          student.email AS student_email
+          answer_submission.grade,   -- Assuming grade is also required
+          CONCAT(users.first_name, ' ', users.last_name) AS student_name,
+          users.email AS student_email
       FROM 
           answer_submission
       INNER JOIN 
-          student 
+          users
       ON 
-          answer_submission.user_id = student.id`;
+          answer_submission.user_id = users.id
+      WHERE 
+          users.role = 'student'
+  `;
 
   db.query(query, (err, results) => {
       if (err) {
+          console.error('Database error:', err);
           return res.status(500).json({ error: 'Database error' });
       }
       res.json({ success: true, results });
   });
 });
+
 
 app.get('/api/users', (req, res) => {
   const { role, status } = req.query;

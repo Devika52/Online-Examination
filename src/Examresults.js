@@ -48,9 +48,10 @@ const ViewExamResults = () => {
                     <Table striped bordered hover className="mt-4">
                         <thead>
                             <tr>
-                                <th>#</th>
+                                <th>ID</th>
                                 <th>Student Name</th>
                                 <th>Student Email</th>
+                                <th>Grade</th>
                                 <th>Marks</th>
                             </tr>
                         </thead>
@@ -61,6 +62,7 @@ const ViewExamResults = () => {
                                         <td>{index + 1}</td>
                                         <td>{result.student_name}</td>
                                         <td>{result.student_email}</td>
+                                        <td>{result.grade}</td>
                                         <td>{result.marks}</td>
                                     </tr>
                                 ))
