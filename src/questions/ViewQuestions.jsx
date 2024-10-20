@@ -6,26 +6,32 @@ import { getUser } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 
 const ViewQuestions = () => {
-  const fetch_api_url = 'http://localhost:8081/questions/get';
+  const fetch_api_url = 'http://localhost:8081/questions/get'; // This will change dynamically based on subject
   const form_submit_url = 'http://localhost:8081/questions/submit_answers';
-  const user_status_url = 'http://localhost:8081/users/status'; // Endpoint to check user status
+  const user_status_url = 'http://localhost:8081/users/status'; // Endpoint to check user status and subject
   const navigate = useNavigate();
   const current_user = getUser();
+  const [subject, setSubject] = useState(''); // To store user's subject
   const [questions, setQuestions] = useState([]);
   const [showQuestions, setShowQuestions] = useState(false);
   const [timeOut, setTimeOut] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
 
+  // Fetch user status and subject on component mount
   useEffect(() => {
     const checkUserStatus = async () => {
       try {
         const response = await axios.get(user_status_url, {
           params: { user_id: current_user.id },
         });
-        if (response.data.status === 'pending') {
+        const { status, subject } = response.data;
+        console.log(subject)
+        if (status === 'pending') {
           setStatusMessage('You have to be approved by the admin');
+        } else if (subject) {
+          setSubject(subject); // Set subject from user table
         } else {
-          // No need to fetch questions until the "Start Exam" button is clicked
+          setStatusMessage('No subject assigned to this user.');
         }
       } catch (error) {
         console.error('Error fetching user status:', error);
@@ -35,9 +41,11 @@ const ViewQuestions = () => {
     checkUserStatus();
   }, [user_status_url, current_user.id]);
 
+  // Start exam by fetching questions from the user's corresponding subject table
   const startExam = async () => {
     try {
-      const response = await axios.get(fetch_api_url);
+      const response = await axios.get(`${fetch_api_url}/${subject}`); // Fetch questions based on subject
+     
       if (!response) throw new Error('Network response was not ok');
       const data = response.data;
       if (typeof data === 'object') {
@@ -66,6 +74,7 @@ const ViewQuestions = () => {
     const payload = {
       user_id: current_user.id,
       formData: formData,
+      subject: subject // Pass the subject
     };
     axios.post(form_submit_url, payload).then((response) => {
       if (response.data.success) {
@@ -73,6 +82,7 @@ const ViewQuestions = () => {
       }
     });
   };
+  
 
   return (
     <div className="container">
@@ -87,7 +97,7 @@ const ViewQuestions = () => {
         <>
           {!showQuestions ? (
             <div className="text-center">
-              <h3>Start the Exam</h3>
+              <h3>Start the Exam for {subject.replace('_', ' ')}</h3>
               <Button variant="primary" onClick={startExam} className="mt-3">
                 Start Now
               </Button>

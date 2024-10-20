@@ -56,7 +56,8 @@ function Admin() {
                     <Link to="/teacher-list"><Button style={buttonStyle} variant="secondary">View Teacher List</Button></Link>
                     
                     <Link to='/question-bank/add'><Button style={buttonStyle} variant="secondary">Add Question</Button></Link>
-                    <Link to='/question-bank/view'><Button style={buttonStyle} variant="secondary">View Question</Button></Link>
+                   
+                    <Link to='/question-bank/delete'><Button style={buttonStyle} variant="secondary">Delete Question</Button></Link>
                     <Link to="/exam-results"><Button style={buttonStyle} variant="secondary">View Exam Result</Button></Link>
                     <Link to="/feedback"><Button style={buttonStyle} variant="secondary">View Feedback</Button></Link>
                 </div>

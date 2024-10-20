@@ -14,7 +14,8 @@ function StudentRegistration() {
     address: '',
     password: '',
     confirmPassword: '',
-    phno: ''
+    phno: '',
+    subject: 'Networks' // Add subject field with a default value
   });
 
   const [message, setMessage] = useState('');
@@ -55,14 +56,15 @@ function StudentRegistration() {
       address: '',
       password: '',
       confirmPassword: '',
-      phno: ''
+      phno: '',
+      subject: 'Networks' // Reset subject to default
     });
     setMessage('');
     setMessageType('');
   };
 
   return (
-    <div className="container ">
+    <div className="container">
       <div className="text-center mb-4">
         <Link to="/">
           <Button variant="secondary">Back</Button>
@@ -100,7 +102,7 @@ function StudentRegistration() {
           required
         />
 
-<label htmlFor="phno">Phone number</label>
+        <label htmlFor="phno">Phone number</label>
         <input
           type="number"
           id="phno"
@@ -109,6 +111,18 @@ function StudentRegistration() {
           onChange={handleChange}
           required
         />
+          <label htmlFor="subject">Subject</label>
+        <select
+          id="subject"
+          name="subject"
+          value={formData.subject}
+          onChange={handleChange}
+          required
+        >
+          <option value="Networks">Networks</option>
+          <option value="Data_structure">Data structure</option>
+          <option value="Operating_System">Operating System</option>
+        </select>
         <label htmlFor="gender">Gender</label>
         <select
           id="gender"
@@ -141,6 +155,8 @@ function StudentRegistration() {
           required
         ></textarea>
 
+      
+
         <label htmlFor="password">Password</label>
         <input
           type="password"
@@ -162,7 +178,7 @@ function StudentRegistration() {
         />
 
         <br />
-        <br/>
+        <br />
         <Button variant="outline-info" type="submit">Submit</Button>{' '}
         <Button variant="warning" type="button" onClick={handleReset}>Reset</Button>
       </form>

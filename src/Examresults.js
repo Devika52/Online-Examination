@@ -6,28 +6,32 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const ViewExamResults = () => {
     const [results, setResults] = useState([]);
+    const [subject, setSubject] = useState(''); // Subject selection state
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchResults = async () => {
-            try {
-                const response = await axios.get('http://localhost:8081/exam-results');
-                if (response.data.success) {
-                    setResults(response.data.results);
-                } else {
-                    console.error('Error fetching results:', response.data.error);
+        if (subject) {
+            const fetchResults = async () => {
+                try {
+                    const response = await axios.get(`http://localhost:8081/exam-results?subject=${subject}`);
+                    if (response.data.success) {
+                        setResults(response.data.results);
+                    } else {
+                        console.error('Error fetching results:', response.data.error);
+                    }
+                } catch (error) {
+                    console.error('Error fetching results:', error);
                 }
-            } catch (error) {
-                console.error('Error fetching results:', error);
-            }
-        };
+            };
 
-        fetchResults();
-    }, []);
+            fetchResults();
+        }
+    }, [subject]);
 
     const handleBack = () => {
         navigate(-1); // Navigate back to the previous page
@@ -40,6 +44,16 @@ const ViewExamResults = () => {
                     <Button variant="secondary" onClick={handleBack}>
                         Back
                     </Button>
+                </Col>
+            </Row>
+            <Row>
+                <Col xs="auto" className="mb-4">
+                    <Form.Select onChange={(e) => setSubject(e.target.value)} value={subject}>
+                        <option value="">Choose Subject</option>
+                        <option value="data_structure">Data Structure</option>
+                        <option value="operating_system">Operating System</option>
+                        <option value="networks">Networks</option>
+                    </Form.Select>
                 </Col>
             </Row>
             <Row>
@@ -68,7 +82,7 @@ const ViewExamResults = () => {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="4" className="text-center">No results found</td>
+                                    <td colSpan="5" className="text-center">No results found</td>
                                 </tr>
                             )}
                         </tbody>

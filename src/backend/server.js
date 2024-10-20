@@ -63,13 +63,13 @@ app.post('/student-login',  (req, res) => {
   });
 });
 app.post('/student/register', (req, res) => {
-  const { firstName,lastName, email, gender, dob, phno, address, password } = req.body;
+  const { firstName,lastName, email, gender, dob, phno, address, password, subject } = req.body;
   console.log("Form Data",req.body)
   // Insert the student into the database
-  const query = 'INSERT INTO users (password,first_name,last_name, email, role,phone_no, gender, address, date_of_birth) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  const query = 'INSERT INTO users (password,first_name,last_name, email, role,phone_no, gender, address, date_of_birth, subject) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?)';
   console.log("phone number1",phno)
   console.log("first name",firstName)
-  db.query(query, [password, firstName, lastName, email,'student',phno,  gender,address, dob ], (err, results) => {
+  db.query(query, [password, firstName, lastName, email,'student',phno,  gender,address, dob, subject ], (err, results) => {
     if (err) {
       console.error('Error occurred:', err);
       res.status(500).json({ message: 'Internal server error' });
@@ -96,19 +96,52 @@ app.post('/teacher/register', (req, res) => {
   });
 });
 
-app.post('/questions/add',(req,res)=>{
-  const { question, option_1, option_2, option_3, option_4, answer } = req.body;
-  const query = 'INSERT INTO questions(question,option_1,option_2,option_3,option_4,answer) VALUES (?,?,?,?,?,?)'
-  db.query(query, [question, option_1, option_2, option_3,option_4,answer], (err, results) => {
+// app.post('/questions/add',(req,res)=>{
+//   const { question, option_1, option_2, option_3, option_4, answer } = req.body;
+//   const query = 'INSERT INTO questions(question,option_1,option_2,option_3,option_4,answer) VALUES (?,?,?,?,?,?)'
+//   db.query(query, [question, option_1, option_2, option_3,option_4,answer], (err, results) => {
+//     if (err) {
+//       console.error('Error occurred:', err);
+//       res.status(500).json({success:'false', message: 'Internal server error' });
+//       return;
+//     }
+//     res.status(201).json({success: 'true', message: 'Question Added successfully!' });
+//   })
+
+// })
+
+app.post('/questions/add', (req, res) => {
+  const { question, option_1, option_2, option_3, option_4, answer, subject } = req.body;
+
+  // Determine the table name based on the subject
+  let tableName = '';
+  
+  switch (subject) {
+    case 'Networks':
+      tableName = 'network';
+      break;
+    case 'Operating Systems':
+      tableName = 'operating_system';
+      break;
+    case 'Data Structures':
+      tableName = 'data_structure';
+      break;
+    default:
+      return res.status(400).json({ success: 'false', message: 'Invalid subject' });
+  }
+
+  // Insert into the appropriate table
+  const query = `INSERT INTO ${tableName} (question, option_1, option_2, option_3, option_4, answer) 
+                 VALUES (?, ?, ?, ?, ?, ?)`;
+
+  db.query(query, [question, option_1, option_2, option_3, option_4, answer], (err, results) => {
     if (err) {
       console.error('Error occurred:', err);
-      res.status(500).json({success:'false', message: 'Internal server error' });
-      return;
+      return res.status(500).json({ success: 'false', message: 'Internal server error' });
     }
-    res.status(201).json({success: 'true', message: 'Question Added successfully!' });
-  })
-
-})
+    return res.status(201).json({ success: 'true', message: 'Question added successfully!' });
+  });
+});
 
 app.get('/questions/get',(req,res)=>{
   const sql = 'SELECT * FROM questions'
@@ -122,38 +155,48 @@ app.get('/questions/get',(req,res)=>{
   })
 })
 
-app.post('/questions/submit_answers',async (req,res)=>{
+app.post('/questions/submit_answers', async (req, res) => {
   const payload = req.body;
   console.log(payload);
-  const formdata= payload.formData
-  let marks=0;
-  const sql = `SELECT answer FROM questions WHERE id = ?`
-  for (const [key, value] of Object.entries(formdata)) {
-    const [resultu] = await DB.query(sql,[key]);
-        if(resultu[0].answer===value)
-         marks+=1;
+  const formData = payload.formData;
+  const subject = payload.subject;  // Pass the subject from the frontend
+  let marks = 0;
+
+  // Dynamically choose the table based on the subject
+  const subjectTable = subject.replace(' ', '_').toLowerCase(); // Example: "operating_system_questions"
+  
+  // Query for correct answers based on the subject table
+  const sql = `SELECT answer FROM ${subjectTable} WHERE id = ?`;
+
+  for (const [key, value] of Object.entries(formData)) {
+    const [resultu] = await DB.query(sql, [key]);
+    if (resultu[0].answer === value) {
+      marks += 1;
+    }
   }
-  const qsql = `SELECT * FROM questions`;
+
+  const qsql = `SELECT * FROM ${subjectTable}`;
   const [qresultu] = await DB.query(qsql);
   const total_marks = qresultu.length;
-  const percentage = (marks/total_marks * 100)
- let  grade = 'F'
-  if(percentage>90)
-    grade = 'A'
-  else if(percentage>80)
-    grade = 'B'
-  else if(percentage>70)
-    grade = 'C'
-  else if(percentage>60)
-    grade = 'D'
-  const query = `INSERT INTO answer_submission(marks,grade,user_id) VALUES (?,?,?)`
-  console.log(marks,percentage,grade);
-  const [fresult] = await DB.query(query,[marks,grade,payload.user_id]);
+  const percentage = (marks / total_marks) * 100;
+
+  let grade = 'F';
+  if (percentage > 90) grade = 'A';
+  else if (percentage > 80) grade = 'B';
+  else if (percentage > 70) grade = 'C';
+  else if (percentage > 60) grade = 'D';
+
+  // Insert the result into answer_submission table
+  const query = `INSERT INTO answer_submission(marks, grade, user_id, subject) VALUES (?, ?, ?, ?)`;
+  console.log(marks, percentage, grade);
+  const [fresult] = await DB.query(query, [marks, grade, payload.user_id, subject]);
 
   res.json({
     success: true,
-    submission_id: fresult.insertId
-  })
+    submission_id: fresult.insertId,
+  });
+});
+
   // db.query(query, [question, option_1, option_2, option_3,option_4,answer], (err, results) => {
   //   if (err) {
   //     console.error('Error occurred:', err);
@@ -163,7 +206,7 @@ app.post('/questions/submit_answers',async (req,res)=>{
   //   res.status(201).json({success: 'true', message: 'Question Added successfully!' });
   // })
 
-})
+
 
 app.post('/api/login', (req, res) => {
   const { email, password } = req.body;
@@ -360,13 +403,17 @@ app.get('/results/:userId', (req, res) => {
 });
 // server.js
 app.get('/exam-results', (req, res) => {
-  console.log("Exam results route accessed..");
+  const subject = req.query.subject; // Get subject from query parameter
+
+  if (!subject) {
+      return res.status(400).json({ error: 'Subject is required' });
+  }
 
   const query = `
       SELECT 
           answer_submission.id, 
           answer_submission.marks, 
-          answer_submission.grade,   -- Assuming grade is also required
+          answer_submission.grade,   
           CONCAT(users.first_name, ' ', users.last_name) AS student_name,
           users.email AS student_email
       FROM 
@@ -377,9 +424,11 @@ app.get('/exam-results', (req, res) => {
           answer_submission.user_id = users.id
       WHERE 
           users.role = 'student'
+      AND 
+          answer_submission.subject = ?
   `;
 
-  db.query(query, (err, results) => {
+  db.query(query, [subject], (err, results) => {
       if (err) {
           console.error('Database error:', err);
           return res.status(500).json({ error: 'Database error' });
@@ -449,15 +498,18 @@ app.post('/api/users/:id/reject', (req, res) => {
 
 app.get('/users/status', (req, res) => {
   const userId = req.query.user_id;
-  console.log("fetching students")
+  console.log("Fetching user's status and subject");
+
   if (!userId) {
     return res.status(400).json({ error: 'User ID is required' });
   }
 
-  const query = 'SELECT status FROM users WHERE id = ?';
+  // Updated query to fetch both status and subject
+  const query = 'SELECT status, subject FROM users WHERE id = ?';
 
   db.query(query, [userId], (err, results) => {
     if (err) {
+      console.error('Database query error:', err);
       return res.status(500).json({ error: 'Database query error' });
     }
 
@@ -465,10 +517,12 @@ app.get('/users/status', (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    const status = results[0].status;
-    res.json({ status });
+    // Extract status and subject from the query result
+    const { status, subject } = results[0];
+    res.json({ status, subject });
   });
 });
+
 
 
 
@@ -563,6 +617,98 @@ app.get('/feedback', (req, res) => {
     } else {
       res.json({ success: true, feedbacks: results });
     }
+  });
+});
+
+// Get questions based on the subject
+app.get('/questions/:subject', (req, res) => {
+  const subject = req.params.subject;
+  let tableName = '';
+
+  switch (subject) {
+    case 'Networks':
+      tableName = 'network';
+      break;
+    case 'Operating_Systems':
+      tableName = 'operating_system';
+      break;
+    case 'Data_Structures':
+      tableName = 'data_structure';
+      break;
+    default:
+      return res.status(400).json({ success: false, message: 'Invalid subject' });
+  }
+
+  const query = `SELECT * FROM ${tableName}`;
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Error fetching questions:', err);
+      return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+    return res.json(results);
+  });
+});
+
+// Delete question from the table
+app.delete('/questions/:subject/:id', (req, res) => {
+  const subject = req.params.subject;
+  const id = req.params.id;
+  let tableName = '';
+
+  switch (subject) {
+    case 'Networks':
+      tableName = 'network';
+      break;
+    case 'Operating_Systems':
+      tableName = 'operating_system';
+      break;
+    case 'Data_Structures':
+      tableName = 'data_structure';
+      break;
+    default:
+      return res.status(400).json({ success: false, message: 'Invalid subject' });
+  }
+
+  const query = `DELETE FROM ${tableName} WHERE id = ?`;
+  db.query(query, [id], (err, results) => {
+    if (err) {
+      console.error('Error deleting question:', err);
+      return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+    return res.json({ success: true, message: 'Question deleted successfully!' });
+  });
+});
+
+app.get('/questions/get/:subject', (req, res) => {
+  console.log("working.............d.",req.params.subject.toLowerCase())
+  const subject = req.params.subject.toLowerCase(); // Use the subject from the URL
+  let tableName = '';
+
+  // Map the subject to the corresponding table name
+  switch (subject) {
+    case 'network':
+      tableName = 'network';
+      break;
+    case 'operating_system':
+      tableName = 'operating_system';
+      break;
+    case 'data_structure':
+      tableName = 'data_structure';
+      break;
+    default:
+      return res.status(400).json({ error: 'Invalid subject' });
+  }
+
+  // Query to get questions from the specific subject table
+  const query = `SELECT * FROM ${tableName}`;
+  console.log("working here .........")
+  db.query(query, (err, results) => {
+    console.log("results",results)
+    if (err) {
+      console.error('Error fetching questions:', err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    res.json({ results });
   });
 });
 

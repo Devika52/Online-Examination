@@ -93,7 +93,7 @@ function Home() {
                 className="form-control"
               />
             </div>
-            <Button type="submit" variant="outline-info" className="mt-2">Submit</Button>{' '}
+            <Button type="submit" variant="outline-secondary" className="mt-2">Submit</Button>{' '}
             <Button variant="warning" onClick={handleReset} className="mt-2">Reset</Button>
           </form>
         )}

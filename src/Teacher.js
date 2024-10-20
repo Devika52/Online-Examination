@@ -51,12 +51,20 @@ function Teacher() {
     backgroundColor: 'rgba(255, 255, 255, 0.7)',
     border: '1px solid rgba(0, 0, 0, 0.8)',
     color: '#000', // Change text color to black for better contrast
-    width: '30%',
+    width: '50%', // Adjusted width to accommodate side-by-side buttons
     textAlign: 'center',
   };
 
   const buttonStyle = {
     color: '#fff',
+    margin: '5px',
+  };
+
+  const buttonContainerStyle = {
+    display: 'flex',
+    flexWrap: 'wrap',  // Wrap buttons if the screen is smaller
+    justifyContent: 'center', // Center the buttons horizontally
+    gap: '5px', // Add gap between buttons
   };
 
   if (status === 'pending') {
@@ -76,12 +84,28 @@ function Teacher() {
         <div style={containerStyle}>
           <Link to="/"><Button style={buttonStyle} className="ms-2 mb-2" variant="secondary">Back</Button></Link>
           <h1 style={{ color: '#000' }}>Teacher</h1> {/* Adjust text color */}
-          <div>
-            <Link to="/update-student"><Button style={buttonStyle} className="ms-2 mb-2" variant="secondary">Update Student</Button><br /></Link>
-            <Link to="/delete-student"><Button style={buttonStyle} className="ms-2 mb-2" variant="secondary">Delete student</Button><br /></Link>
-            <Link to="/student-list"><Button style={buttonStyle} className="ms-2 mb-2" variant="secondary">View Student list</Button><br /></Link>
-            <Button style={buttonStyle} className="ms-2 mb-2" variant="secondary">Approval</Button><br />
-            <Link to="/exam-results"><Button style={buttonStyle} className="ms-2 mb-2" variant="secondary">View exam result</Button></Link>
+          <div style={buttonContainerStyle}>
+            <Link to="/update-student">
+              <Button style={buttonStyle} variant="secondary">Update Student</Button>
+            </Link>
+            <Link to="/delete-student">
+              <Button style={buttonStyle} variant="secondary">Delete Student</Button>
+            </Link>
+            <Link to="/student-list">
+              <Button style={buttonStyle} variant="secondary">View Student List</Button>
+            </Link>
+            <Link to="/student-Approval">
+              <Button style={buttonStyle} variant="secondary">Student Approval</Button>
+            </Link>
+            <Link to='/question-bank/add'>
+              <Button style={buttonStyle} variant="secondary">Add Question</Button>
+            </Link>
+            <Link to='/question-bank/delete'>
+              <Button style={buttonStyle} variant="secondary">Delete Question</Button>
+            </Link>
+            <Link to="/exam-results">
+              <Button style={buttonStyle} variant="secondary">View Exam Result</Button>
+            </Link>
           </div>
         </div>
       </div>

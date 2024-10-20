@@ -27,6 +27,7 @@ import AddQuestion from './questions/AddQuestion';
 import StudentApproval from './studentApproval';
 import TeacherApproval from './TeacherApproval';
 import ViewFeedback from './ViewFeedback';
+import DeleteQuestion from './questions/DeleteQuestion';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
@@ -45,7 +46,7 @@ root.render(
         <Route path="/question-bank" element={<Appp/>}/>
         <Route path="/question-bank/add" element={<AddQuestion/>}/>
         <Route path="/question-bank/view" element={<ViewQuestions/>}/>
-
+        <Route path="/question-bank/delete" element={<DeleteQuestion/>}/>
         {/* Results */}
         <Route path="/admin/results" element={<Results/>}/>
         
