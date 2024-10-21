@@ -143,17 +143,20 @@ function Registration() {
           </Row>
 
           <Row>
-            <Form.Group as={Col} controlId="formGridPhoneNumber">
-              <Form.Label>Phone Number</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter your phone number"
-                name="phoneNumber"
-                value={formData.phoneNumber}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
+          <Form.Group as={Col} controlId="formGridPhoneNumber">
+  <Form.Label>Phone Number</Form.Label>
+  <Form.Control
+    type="text"
+    placeholder="Enter your phone number"
+    name="phoneNumber"
+    value={formData.phoneNumber}
+    onChange={handleChange}
+    required
+    maxLength="10" // Max 10 digits
+    minLength="10" // Min 10 digits
+    onInput={(e) => e.target.value = e.target.value.slice(0, 10)} // Prevents entering more than 10 digits
+  />
+</Form.Group>
           </Row>
           <Row>
   <Form.Group as={Col} controlId="formGridDob">
@@ -169,33 +172,35 @@ function Registration() {
   </Form.Group>
 </Row>
 
-          <Row>
-            <Form.Group as={Col} controlId="formGridPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Enter password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-          </Row>
+<Row>
+  <Form.Group as={Col} controlId="formGridPassword">
+    <Form.Label>Password</Form.Label>
+    <Form.Control
+      type="password"
+      placeholder="Enter password"
+      name="password"
+      value={formData.password}
+      onChange={handleChange}
+      required
+      minLength="5" // Minimum 5 characters for password
+    />
+  </Form.Group>
+</Row>
 
-          <Row>
-            <Form.Group as={Col} controlId="formGridConfirmPassword">
-              <Form.Label>Confirm Password</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Confirm password"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-          </Row>
+<Row>
+  <Form.Group as={Col} controlId="formGridConfirmPassword">
+    <Form.Label>Confirm Password</Form.Label>
+    <Form.Control
+      type="password"
+      placeholder="Confirm password"
+      name="confirmPassword"
+      value={formData.confirmPassword}
+      onChange={handleChange}
+      required
+      minLength="5" // Minimum 5 characters for confirm password
+    />
+  </Form.Group>
+</Row>
           <br/>
           <div className="d-grid gap-2">
             <div className="Button-row">

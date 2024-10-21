@@ -102,15 +102,18 @@ function StudentRegistration() {
           required
         />
 
-        <label htmlFor="phno">Phone number</label>
-        <input
-          type="number"
-          id="phno"
-          name="phno"
-          value={formData.phno}
-          onChange={handleChange}
-          required
-        />
+<label htmlFor="phno">Phone number</label>
+<input
+  type="number"
+  id="phno"
+  name="phno"
+  value={formData.phno}
+  onChange={handleChange}
+  required
+  minLength="10"
+  maxLength="10"
+  onInput={(e) => e.target.value = e.target.value.slice(0, 10)} // Prevents exceeding 10 digits
+/>
           <label htmlFor="subject">Subject</label>
         <select
           id="subject"
@@ -157,25 +160,27 @@ function StudentRegistration() {
 
       
 
-        <label htmlFor="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
+<label htmlFor="password">Password</label>
+<input
+  type="password"
+  id="password"
+  name="password"
+  value={formData.password}
+  onChange={handleChange}
+  required
+  minLength="5" // Minimum 5 characters for password
+/>
 
-        <label htmlFor="confirmPassword">Confirm Password</label>
-        <input
-          type="password"
-          id="confirmPassword"
-          name="confirmPassword"
-          value={formData.confirmPassword}
-          onChange={handleChange}
-          required
-        />
+<label htmlFor="confirmPassword">Confirm Password</label>
+<input
+  type="password"
+  id="confirmPassword"
+  name="confirmPassword"
+  value={formData.confirmPassword}
+  onChange={handleChange}
+  required
+  minLength="5" // Minimum 5 characters for password
+/>
 
         <br />
         <br />
