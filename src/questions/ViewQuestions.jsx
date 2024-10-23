@@ -45,7 +45,7 @@ const ViewQuestions = () => {
   const startExam = async () => {
     try {
       const response = await axios.get(`${fetch_api_url}/${subject}`); // Fetch questions based on subject
-     
+     console.log(response)
       if (!response) throw new Error('Network response was not ok');
       const data = response.data;
       if (typeof data === 'object') {

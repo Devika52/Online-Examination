@@ -688,7 +688,7 @@ app.get('/questions/get/:subject', (req, res) => {
 
   // Map the subject to the corresponding table name
   switch (subject) {
-    case 'network':
+    case 'networks':
       tableName = 'network';
       break;
     case 'operating_system':
