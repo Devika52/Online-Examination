@@ -160,11 +160,26 @@ app.post('/questions/submit_answers', async (req, res) => {
   console.log(payload);
   const formData = payload.formData;
   const subject = payload.subject;  // Pass the subject from the frontend
+
+  let subjectTable = '';
+
+  // Use switch case to map subjects to the correct table name
+  switch (subject) {
+    case 'Networks':
+      subjectTable = 'network';
+      break;
+    case 'Operating_System':
+      subjectTable = 'operating_system';
+      break;
+    case 'Data_structure':
+      subjectTable = 'data_structure';
+      break;
+    default:
+      return res.status(400).json({ success: false, message: 'Invalid subject' });
+  }
+
   let marks = 0;
 
-  // Dynamically choose the table based on the subject
-  const subjectTable = subject.replace(' ', '_').toLowerCase(); // Example: "operating_system_questions"
-  
   // Query for correct answers based on the subject table
   const sql = `SELECT answer FROM ${subjectTable} WHERE id = ?`;
 
@@ -175,6 +190,7 @@ app.post('/questions/submit_answers', async (req, res) => {
     }
   }
 
+  // Get total number of questions
   const qsql = `SELECT * FROM ${subjectTable}`;
   const [qresultu] = await DB.query(qsql);
   const total_marks = qresultu.length;
@@ -196,6 +212,7 @@ app.post('/questions/submit_answers', async (req, res) => {
     submission_id: fresult.insertId,
   });
 });
+
 
   // db.query(query, [question, option_1, option_2, option_3,option_4,answer], (err, results) => {
   //   if (err) {
