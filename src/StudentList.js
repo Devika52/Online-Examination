@@ -51,7 +51,7 @@ function StudentList() {
               <td>{student.phone_no}</td>
               <td>{student.address}</td>
               <td>{student.gender}</td>
-              <td>{student.date_of_birth}</td>
+              <td>{new Date(student.date_of_birth).toLocaleDateString()}</td>
             </tr>
           ))}
         </tbody>
