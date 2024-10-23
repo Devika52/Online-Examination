@@ -107,7 +107,7 @@ const ViewQuestions = () => {
               {!timeOut && (
                 <h3>
                   Time Remaining:{' '}
-                  <Countdown date={Date.now() + 60000} onComplete={handleComplete} />
+                  <Countdown date={Date.now() + 120000} onComplete={handleComplete} />
                 </h3>
               )}
               {timeOut && <h3 style={{ color: 'red' }}>Time's Up</h3>}
