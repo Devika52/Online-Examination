@@ -109,9 +109,9 @@ function UpdateStudent() {
           <div className="mb-3">
             <label className="form-label">Phone Number</label>
             <input
-              type="text"
+              type="number"
               className="form-control"
-              name="ph_no"
+              name="phone_no"
               value={student.phone_no}
               onChange={handleChange}
               required

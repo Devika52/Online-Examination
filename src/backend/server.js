@@ -253,9 +253,11 @@ app.put('/apii/students', (req, res) => {
 
   db.query(query, [firstname,lastname, ph_no, address, gender, dob, email], (err, result) => {
     if (err) {
+      console.log("not working......",err)
       return res.status(500).send(err);
     }
     if (result.affectedRows === 0) {
+      console.log("working..........")
       return res.status(404).send({ message: 'Student not found' });
     }
     res.send({ message: 'Student details updated successfully' });
